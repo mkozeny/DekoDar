@@ -12,34 +12,34 @@
 
     <h:form id="loginForm">
 
-        <rich:panel>
+        <rich:panel  style="width: 40%;margin-top:25px;margin-left:30%">
             <f:facet name="header">Login</f:facet>
 
-            <p>Please login here</p>
+        
 
-            <div class="dialog">
-                <h:panelGrid columns="2" rowClasses="prop" columnClasses="name,value">
+            <div class="dialog" style="width: 100%">
+                <h:panelGrid columns="2" style="width: 100%" rowClasses="prop" columnClasses="name,value">
                     <h:outputLabel for="username">Username</h:outputLabel>
                     <h:inputText id="username"
                               value="#{credentials.username}"/>
                     <h:outputLabel for="password">Password</h:outputLabel>
                     <h:inputSecret id="password"
                                 value="#{credentials.password}"/>
-                    <h:outputLabel for="rememberMe">Remember me</h:outputLabel>
-                    <h:selectBooleanCheckbox id="rememberMe"
-                                          value="#{rememberMe.enabled}"/>
+                   
+                   
                 </h:panelGrid>
+                <div class="actionButtons">
+            <h:commandButton id="submit" value="Login" action="#{identity.login}"/>
+            
+           
+        </div>
             </div>
 
-            <p>
-              <i>Note - </i> You may login with the username 'admin' and a blank password.
-            </p>
+           
 
         </rich:panel>
 
-        <div class="actionButtons">
-            <h:commandButton id="submit" value="Login" action="#{identity.login}"/>
-        </div>
+        
 
     </h:form>
 

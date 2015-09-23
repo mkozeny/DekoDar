@@ -7,7 +7,7 @@
     xmlns:rich="http://richfaces.org/rich">
     <rich:toolBarGroup>
         <h:outputText value="#{projectName}:"/>
-        <s:link id="menuHomeId" view="/home.xhtml" value="Home" propagation="none"/>
+        <s:link id="menuHomeId" view="/home.xhtml" value="Home" propagation="none" rendered="#{identity.loggedIn}"/>
     </rich:toolBarGroup>
     <!-- @newMenuItem@ -->
     <rich:toolBarGroup location="right">

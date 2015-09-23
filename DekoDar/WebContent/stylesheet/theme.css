@@ -94,6 +94,7 @@ select {
 	padding: 5px;
 	margin-top: 3px;
 	clear: left;
+	width: 50%;
 }
 
 .value {
