@@ -6,9 +6,11 @@ import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+import javax.persistence.TableGenerator;
 import javax.persistence.Transient;
 
 import org.hibernate.validator.Length;
@@ -20,26 +22,23 @@ import cz.mkozeny.dekodar.Price;
 public class Product implements Serializable {
 
 	@Id
-	@GeneratedValue
-	Long id;
+	@TableGenerator(name = "product_gen" , table = "generator_table", pkColumnName = "primary_key_column", valueColumnName = "Value_column", pkColumnValue = "product_id", allocationSize = 1, initialValue = 1)
+	@GeneratedValue(strategy = GenerationType.TABLE, generator = "product_gen")
+	private Long id;
 
 	// SC010132
 	@Length(max = 35)
-	String barCode;
+	private String barCode;
 
 	@Length(max = 35)
-	String model;
+	private String model;
 
 	@Length(max = 35)
-	String description;
+	private String description;
 
-	Date createDate;
+	private Date createDate;
 
-	Double price = new Double(0.0);
-
-	@ManyToOne
-	@NotNull
-	Vat vat;
+	private Double price = new Double(0.0);
 
 	public Long getId() {
 		return id;
@@ -58,18 +57,6 @@ public class Product implements Serializable {
 
 	public void setAvailAbility(StockAvailAbility availAbility) {
 		this.availAbility = availAbility;
-	}
-
-	public Vat getVat() {
-		return vat;
-	}
-
-	public void setVat(Vat vat) {
-		this.vat = vat;
-	}
-
-	public Price getValidPrice() {
-		return new Price(new BigDecimal(price), vat);
 	}
 
 	public Double getPrice() {

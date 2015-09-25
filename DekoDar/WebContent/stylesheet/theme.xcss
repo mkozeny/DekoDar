@@ -71,40 +71,14 @@
 	<u:selector name=".rich-toolbar a:hover">
 		<u:style name="color" skin="generalTextColor"/>
 	</u:selector>
-	<u:selector name=".rich-toolbar .rich-menu-item, .rich-toolbar .rich-menu-item a, .rich-toolbar .rich-menu-item a:hover, .rich-toolbar .rich-menu-item a:visited">
-		<u:style name="color" skin="generalTextColor" />
+	<!--
+	<u:selector name=".rich-table-subheadercell a:link, .rich-table-subheadercell a:visited, .rich-table-subheadercell a:active">
+		<u:style name="color" skin="generalTextColor"/>
 	</u:selector>
+	-->
 	<u:selector name=".rich-table-subheadercell a:hover">
 		<u:style name="color" skin="calendarHolidaysTextColor"/>
 	</u:selector>
-	<!-- Richfaces styles -->
-	<u:selector name="input[type=text][class*=rich-combobox-button-icon]">
-        <u:style name="background-image">
-            <f:resource f:key="org.richfaces.renderkit.html.images.ComboBoxArrowImage" />
-        </u:style>    
-        <u:style name="background-color" value="transparent"/>
-    </u:selector>    
-    
-    <u:selector name="input[type=text][class~=rich-combobox-button-icon-disabled]">
-        <u:style name="background-image">
-            <f:resource f:key="org.richfaces.renderkit.html.images.ComboBoxArrowImageDisable" />
-        </u:style>
-        <u:style name="background-color" value="transparent"/>
-    </u:selector>
-    
-    <u:selector name="input[type=text][class*=rich-combobox-button-background]">
-        <u:style name="background-image">
-            <f:resource f:key="org.richfaces.renderkit.html.images.SpinnerButtonGradient"/>
-        </u:style>
-        <u:style name="background-color" skin="tabBackgroundColor"/>
-    </u:selector>    
-    
-    <u:selector name="input[type=text][class~=rich-combobox-button-pressed-background]">
-        <u:style name="background-image">
-            <f:resource f:key="org.richfaces.renderkit.html.images.ComboBoxButtonPressGradient"/>
-        </u:style>
-        <u:style name="background-color" skin="tabBackgroundColor"/>
-    </u:selector>
 	<!-- Define static styles in the CDATA block below (you can also move this block to the top) -->
 	<f:verbatim><![CDATA[
 ]]></f:verbatim>
