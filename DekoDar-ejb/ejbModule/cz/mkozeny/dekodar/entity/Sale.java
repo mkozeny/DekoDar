@@ -32,7 +32,8 @@ import org.hibernate.validator.NotNull;
 public class Sale {
 
 	public static enum SaleStateType {
-		OPENED("Sale_opened"), PROCESSED("Sale_processed"), CLOSED("Sale_closed"), CANCELLED("Sale_cancelled");
+		OPENED("Sale_opened"), PROCESSED("Sale_processed"), CLOSED(
+				"Sale_closed"), CANCELLED("Sale_cancelled");
 
 		SaleStateType(String keyName) {
 			this.keyName = keyName;
@@ -60,7 +61,7 @@ public class Sale {
 	}
 
 	@Id
-	@TableGenerator(name = "sale_gen" , table = "generator_table", pkColumnName = "primary_key_column", valueColumnName = "Value_column", pkColumnValue = "sale_id", allocationSize = 1, initialValue = 1)
+	@TableGenerator(name = "sale_gen", table = "generator_table", pkColumnName = "primary_key_column", valueColumnName = "Value_column", pkColumnValue = "sale_id", allocationSize = 1, initialValue = 1)
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "sale_gen")
 	Long id;
 
@@ -102,6 +103,8 @@ public class Sale {
 	@ManyToOne
 	@NotNull
 	AccountingPeriod accountingPeriod;
+	
+	Date vatDate;
 
 	public void recalculateTotalPrices() {
 		totalPriceExclVatValue = BigDecimal.ZERO;
@@ -121,7 +124,7 @@ public class Sale {
 			totalVatValue = totalVatValue.multiply(BigDecimal.ONE
 					.subtract(discount.divide(new BigDecimal(100))));
 		}
-		
+
 		totalPriceInclVatValue = totalPriceExclVatValue.add(totalVatValue);
 
 	}
@@ -181,6 +184,31 @@ public class Sale {
 
 	public BigDecimal getTotalPriceExclVatValue() {
 		return totalPriceExclVatValue;
+	}
+
+	@Transient
+	public BigDecimal getTotalLinesDiscountExclVatValue() {
+		BigDecimal totalDiscountExclVatValue = BigDecimal.ZERO;
+		for (SaleLine saleLine : saleLines) {
+			if (saleLine.getLineDiscountValue() != null)
+				totalDiscountExclVatValue = totalDiscountExclVatValue
+						.add(saleLine.getLineDiscountValue().getPriceExclVat());
+		}
+		return totalDiscountExclVatValue;
+	}
+
+	@Transient
+	public BigDecimal getTotalDiscountExclVatValue() {
+		BigDecimal totalLinePriceExclVatValue = BigDecimal.ZERO;
+		for (SaleLine saleLine : saleLines) {
+			totalLinePriceExclVatValue = totalLinePriceExclVatValue
+					.add(saleLine.getLinePrice().getPriceExclVat());
+		}
+		if (discount != null)
+			return totalLinePriceExclVatValue.multiply(discount
+					.divide(new BigDecimal(100)));
+		else
+			return BigDecimal.ZERO;
 	}
 
 	public void setTotalPriceExclVatValue(BigDecimal totalPriceExcVatValue) {
@@ -288,4 +316,12 @@ public class Sale {
 		this.accountingPeriod = accountingPeriod;
 	}
 
+	public Date getVatDate() {
+		return vatDate;
+	}
+
+	public void setVatDate(Date vatDate) {
+		this.vatDate = vatDate;
+	}
+	
 }
