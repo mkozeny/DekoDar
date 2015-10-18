@@ -8,7 +8,10 @@
     <rich:toolBarGroup>
         <h:outputText value="#{projectName}:"/>
         <s:link id="menuHomeId" view="/home.xhtml" value="Home" propagation="none" rendered="#{identity.loggedIn}"/>
-        <s:link id="menuProductListId" view="/productList.xhtml" value="Products" propagation="none" rendered="#{identity.loggedIn}"/>
+        <s:link id="menuProductListId" view="/productList.xhtml" value="Produkty" propagation="none" rendered="#{identity.loggedIn}">
+        	<f:param name="mode" value="productCrud"/>
+        </s:link>
+        <s:link id="menuSaleListId" view="/saleList.xhtml" value="Doklady" propagation="none" rendered="#{identity.loggedIn}"/>
     </rich:toolBarGroup>
     <!-- @newMenuItem@ -->
     <rich:toolBarGroup location="right">

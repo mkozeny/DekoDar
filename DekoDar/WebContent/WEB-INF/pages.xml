@@ -21,8 +21,54 @@
 		<navigation from-action="#{productAction.selectProduct(productIter)}">
 			<redirect view-id="/product.xhtml" />
 		</navigation>
+		<navigation from-action="#{saleAction.selectProduct(productIter)}">
+		    <redirect view-id="/sale.xhtml"/>
+		</navigation>
 		<navigation from-action="#{productAction.newProduct()}">
 			<redirect view-id="/product.xhtml" />
+		</navigation>
+		<navigation from-action="back">
+			<rule if="#{mode=='productSaleOperation'}">
+				<redirect view-id="/sale.xhtml" />
+			</rule>
+		</navigation>
+	</page>
+
+	<page login-required="true" view-id="/saleList.xhtml">
+		<navigation from-action="#{saleAction.selectSale(saleIter)}">
+			<redirect view-id="/sale.xhtml" />
+		</navigation>
+		<navigation from-action="#{saleAction.newSale()}">
+			<redirect view-id="/sale.xhtml" />
+		</navigation>
+	</page>
+
+	<page login-required="true" view-id="/sale.xhtml">
+		<param name="mode" />
+		<navigation from-action="findProductId">
+			<redirect view-id="/productList.xhtml">
+				<param name="mode" value="productSaleOperation" />
+			</redirect>
+		</navigation>
+		<navigation from-action="#{saleAction.saveSale()}">
+			<redirect view-id="/sale.xhtml" />
+		</navigation>
+		<navigation from-action="#{saleAction.showProductDetail(saleLineIter.product.id)}">
+			<rule if-outcome="OK">
+				<redirect view-id="/product.xhtml">
+					<param name="mode" value="productSaleOperation" />
+				</redirect>
+			</rule>
+		</navigation>
+		<navigation from-action="#{saleAction.showProductDetail(saleAction.productId)}">
+			<rule if-outcome="OK">
+				<redirect view-id="/product.xhtml">
+					<param name="mode" value="productSaleOperation" />
+				</redirect>
+			</rule>
+		</navigation>
+		<navigation from-action="back">
+			<redirect view-id="/saleList.xhtml" />
 		</navigation>
 	</page>
 

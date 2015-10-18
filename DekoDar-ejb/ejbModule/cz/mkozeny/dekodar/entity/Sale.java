@@ -12,6 +12,8 @@ import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
@@ -20,19 +22,17 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
+import javax.persistence.TableGenerator;
 import javax.persistence.Transient;
 
 import org.hibernate.validator.Length;
 import org.hibernate.validator.NotNull;
 
 @Entity
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "Discriminator", discriminatorType = DiscriminatorType.STRING)
-@DiscriminatorValue("SALE")
 public class Sale {
 
 	public static enum SaleStateType {
-		OPENED("Sale_opened"), CLOSED("Sale_closed");
+		OPENED("Sale_opened"), PROCESSED("Sale_processed"), CLOSED("Sale_closed"), CANCELLED("Sale_cancelled");
 
 		SaleStateType(String keyName) {
 			this.keyName = keyName;
@@ -60,8 +60,9 @@ public class Sale {
 	}
 
 	@Id
-	@Length(max = 10)
-	String id;
+	@TableGenerator(name = "sale_gen" , table = "generator_table", pkColumnName = "primary_key_column", valueColumnName = "Value_column", pkColumnValue = "sale_id", allocationSize = 1, initialValue = 1)
+	@GeneratedValue(strategy = GenerationType.TABLE, generator = "sale_gen")
+	Long id;
 
 	@NotNull
 	Date dateCreated;
@@ -120,6 +121,8 @@ public class Sale {
 			totalVatValue = totalVatValue.multiply(BigDecimal.ONE
 					.subtract(discount.divide(new BigDecimal(100))));
 		}
+		
+		totalPriceInclVatValue = totalPriceExclVatValue.add(totalVatValue);
 
 	}
 
@@ -189,11 +192,11 @@ public class Sale {
 		return PaymentType.values();
 	}
 
-	public String getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
