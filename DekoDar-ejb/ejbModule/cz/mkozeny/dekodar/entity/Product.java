@@ -49,7 +49,7 @@ public class Product implements Serializable {
 	}
 
 	@OneToOne
-	private StockAvailAbility availAbility;
+	private StockAvailAbility availAbility = new StockAvailAbility();
 
 	public StockAvailAbility getAvailAbility() {
 		return availAbility;

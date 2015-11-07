@@ -46,7 +46,7 @@ public class ProductActionBean implements ProductAction {
 	public void selectProduct(Product selectedProduct) {
 		log.info("Product #0 has been selected", selectedProduct.getId());
 		Long id = selectedProduct.getId();
-		product = selectedProduct;
+		product = (Product) em.createQuery("select p from Product p left join fetch p.availAbility where p.id=" + id).getSingleResult();
 		String message = "Produkt " + id + " byl vybrán";
 
 		applicationLogAction
@@ -62,8 +62,7 @@ public class ProductActionBean implements ProductAction {
 
 	public void addProduct() {
 		product.setCreateDate(new Date());
-		StockAvailAbility availAbility = new StockAvailAbility();
-		availAbility.setAvailAbility(2L);
+		StockAvailAbility availAbility = product.getAvailAbility();
 		em.persist(availAbility);
 		product.setAvailAbility(availAbility);
 		em.persist(product);

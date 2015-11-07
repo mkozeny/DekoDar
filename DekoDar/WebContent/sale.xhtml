@@ -20,7 +20,7 @@
 					</f:facet>
 					<h:panelGroup>
 					<s:label styleClass="panelGridLabel">
-						<h:outputText value="#{messages['product.pnc']}" />
+						<h:outputText value="Číslo produktu" />
 					</s:label>					
 						<s:decorate template="edit.xhtml">
 							<h:inputText id="productId" value="#{saleAction.productId}"	styleClass="inputText"  required="true"/>						
@@ -31,7 +31,7 @@
 					
 					<h:panelGroup>
 						<s:label styleClass="panelGridLabel">
-							<h:outputText value="#{messages['serviceOrderLine.quantity']}" />
+							<h:outputText value="Množství" />
 						</s:label>
 						<s:decorate template="edit.xhtml">
 							<h:inputText value="#{saleAction.quantity}" styleClass="inputText" required="true" autocomplete="off"></h:inputText>
@@ -40,7 +40,7 @@
 					
 					<h:panelGroup>
 						<s:label styleClass="panelGridLabel">
-							<h:outputText value="#{messages['vat.vat']}" />
+							<h:outputText value="DPH" />
 						</s:label>
 							<h:outputText value="#{vatIter.vatCode}" />
 						<s:decorate template="edit.xhtml">
@@ -52,7 +52,7 @@
 					</h:panelGroup>
 					
 					
-					 <h:commandButton   id="addProduct" action="#{saleAction.addNewSaleLine()}"	value="přidat produkt" >
+					 <h:commandButton   id="addProduct" action="#{saleAction.addNewSaleLine()}"	value="Přidat produkt" >
 					 		<s:defaultAction/>
 					 </h:commandButton>			
 				</h:panelGrid>
@@ -74,13 +74,13 @@
 								<rich:column>
 									<f:facet name="header">
 										<h:outputText
-											value="#{messages['serviceOrderLineIter.lineNumber']}" />
+											value="Číslo řádky" />
 									</f:facet>
 									<h:outputText value="#{saleLineIter.lineNumber}" />
 								</rich:column>
 								<rich:column>
 									<f:facet name="header">
-										<h:outputText value="#{messages['product.pnc']}" />
+										<h:outputText value="Číslo produktu" />
 									</f:facet>
 									<s:decorate template="edit.xhtml">
 										<h:commandLink
@@ -90,7 +90,7 @@
 								</rich:column>
 								<rich:column>
 									<f:facet name="header">
-										<h:outputText value="#{messages['popis']}" />
+										<h:outputText value="Popis" />
 									</f:facet>
 									<s:decorate template="edit.xhtml">
 										<h:inputText id="description-#{row}"
@@ -99,7 +99,7 @@
 								</rich:column>
 								<rich:column>
 									<f:facet name="header">
-										<h:outputText value="#{messages['product.model']}" />
+										<h:outputText value="Model" />
 									</f:facet>
 									<h:outputText id="description-#{row}"	value="#{saleLineIter.product.model}" />
 									
@@ -108,14 +108,14 @@
 								
 								<rich:column>
 									<f:facet name="header">
-										<h:outputText value="#{messages['serviceOrderLine.quantity']}" />
+										<h:outputText value="Množství" />
 									</f:facet>
 									<h:outputText value="#{saleLineIter.quantity}" />
 								</rich:column>
 								<rich:column>
 									<f:facet name="header">
 										<h:outputText
-											value="#{messages['serviceOrderLine.unitPrice']}" />
+											value="Jednotková cena" />
 									</f:facet>
 									<s:decorate template="edit.xhtml">
 										<h:inputText  converter="#{bigDecimalConverter}" value="#{saleLineIter.price.amount}"	styleClass="inputText">										  									   											
@@ -129,7 +129,7 @@
 								</rich:column>
 								<rich:column>
 									<f:facet name="header">
-										<h:outputText value="#{messages['sale.discount']}" />
+										<h:outputText value="Sleva" />
 									</f:facet>
 
 									<s:decorate template="edit.xhtml">
@@ -149,7 +149,7 @@
 								
 								 <rich:column>
 	                    <f:facet name="header">
-	                      <h:outputText value="#{messages['sale.discount']} na řádek" />
+	                      <h:outputText value="Sleva na řádek" />
 	                    </f:facet>
 	                    <s:decorate template="edit.xhtml">
 	                      <h:outputText value="#{saleLineIter.lineDiscountValue.amount}" styleClass="inputText">
@@ -160,16 +160,14 @@
 
 								<rich:column>
 									<f:facet name="header">
-										<h:outputText value="#{messages['vat.vat']}" />
+										<h:outputText value="DPH" />
 									</f:facet>
 									<h:outputText value="#{saleLineIter.price.vat.vatCode}"/>									
 								</rich:column>
 								<rich:column>
 									<f:facet name="header">
 										<h:outputText id="line-#{row}"
-											value="#{messages['serviceOrderLine.linePrice']}" >
-											<f:convertNumber pattern="#{customizer.pricePattern}" />
-											</h:outputText>
+											value="Cena celkem bez DPH"/>
 									</f:facet>
 
 									<h:outputText value="#{saleLineIter.linePrice.priceExclVat}"
@@ -180,7 +178,7 @@
 								<rich:column>
 									<h:commandButton
 										action="#{saleAction.deleteSaleLine(saleLineIter)}"
-										value="#{messages['button.delete']}"
+										value="Smazat"
 										onclick="return confirm('#{messages['button.areYouSure']}')" />
 								</rich:column>
 							</rich:dataTable></td>
