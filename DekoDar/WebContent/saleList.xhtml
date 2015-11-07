@@ -1,0 +1,126 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:a4j="http://richfaces.org/a4j"
+    template="layout/template-filter.xhtml">
+
+<ui:define name="leftArea">
+    <rich:panel styleClass="filtering" headerClass="filterTitle">    
+            <f:facet name="header">#{messages['user.filter']}</f:facet>
+ 				<h:form id="saleFilterForm">
+ 					<h:panelGrid id="panel" columns="1"  styleClass="filterText">
+ 						<s:label for="saleIdInput" value="#{messages['sale.id']}"/>
+    					<h:inputText styleClass="filterInput" value="#{saleSearchAction.id}" id="saleIdInput"></h:inputText>
+ 					  
+  						<s:label for="saleUsernmaeInput" value="#{messages['user.username']}"/>
+    					<h:inputText styleClass="filterInput" value="#{saleSearchAction.username}" id="saleUsernmaeInput"></h:inputText>  					
+									
+	    				
+	    				<s:label for="dateFromInput" value="#{messages['serviceOrder.dateCreated']} #{messages['button.dateFrom']}"/>						
+						<s:decorate template="edit.xhtml">
+							<rich:calendar id="dateFromInput" value="#{saleSearchAction.dateFrom}"  enableManualInput="#{true}"  datePattern="#{customizer.datePattern}" locale="#{calendarBean.locale}" showApplyButton="#{false}"/>
+						</s:decorate>
+
+						<s:label for="dateToInput" value="#{messages['serviceOrder.dateCreated']} #{messages['button.dateTo']}"/>
+
+						<s:decorate template="edit.xhtml">
+							<rich:calendar id="dateToInput" enableManualInput="#{true}" value="#{saleSearchAction.dateTo}"    datePattern="#{customizer.datePattern}" locale="#{calendarBean.locale}" showApplyButton="#{false}"/>
+						</s:decorate>
+
+						<s:label for="paymentType" styleClass="panelGridLabel">
+									<h:outputText value="#{messages['sale.paymentType']}" />
+								</s:label>
+								
+									<h:selectOneMenu id="paymentType"
+										value="#{saleSearchAction.paymentType}">
+										<s:selectItems value="#{saleSearchAction.paymentTypes}"
+											var="enum" label="#{messages[enum.keyName]}" noSelectionLabel="Vyberte typ platby" />
+										<s:convertEnum />
+									</h:selectOneMenu>
+									
+						<s:label for="stateInput" value="#{messages['sale.state']}"/>
+						<h:selectOneMenu id="stateInput"
+										value="#{saleSearchAction.saleStateType}">
+										<s:selectItems  value="#{invoiceSearchAction.saleStateTypes}"
+											var="enum" label="#{messages[enum.keyName]}" noSelectionLabel="Vyberte stav" />
+										<s:convertEnum />
+						</h:selectOneMenu>
+						
+    					
+    				</h:panelGrid>
+    				<h:commandButton action="#{saleSearchAction.searchSales()}" value="#{messages['button.search']}" />
+    				<a4j:commandButton value="vymazat filtr (ctrl+f)" id="clearFilterButton" immediate="true"/>
+    				<h:commandLink  action="#{excelExporter.export('saleForm:saleTable')}">													
+	    				<h:graphicImage value="/img/dokument_excel.png" title="Export do excelu"  styleClass="exportButton"/>
+	    			</h:commandLink>    					         
+			</h:form>	    						
+		    <rich:hotKey  key="ctrl+f" handler="#{rich:element('clearFilterButton')}.click();" timing="onload" />		
+			<rich:jQuery selector="#clearFilterButton" query="click(function(){clearFilterDropdown();clearFilterText()})"/>	
+			<rich:jQuery selector="#saleFilterForm input[type=text]" name="clearFilterText"   timing="onJScall" query="val('')"/>	
+			<rich:jQuery selector="#saleFilterForm select" name="clearFilterDropdown"   timing="onJScall" query="val('org.jboss.seam.ui.NoSelectionConverter.noSelectionValue')"/>	  
+		       
+				         		
+	</rich:panel> 
+</ui:define>                
+           
+
+
+<ui:define name="seznam">                 
+    <rich:panel >    
+        <f:facet name="header"><h:outputText value="Seznam pokladních dokladů"/></f:facet>        
+        <h:form id="saleForm">
+		<rich:dataTable id="saleTable" value="#{sales}" var="saleIter"   rows="#{customizer.pageSize}" reRender="ds">
+            
+            <rich:column sortBy="#{saleIter.id}"  styleClass="c#{saleIter.id}"> 
+                <f:facet name="header">
+                    <h:outputText value="#{messages['sale.id']}"/>
+                </f:facet>                
+                <s:link style="#{saleIter.state == 'CANCELLED' ?'text-decoration:line-through;':''}" value="#{saleIter.id}" action="#{saleAction.selectSale(saleIter)}" />
+            </rich:column> 
+             
+             <rich:column >
+                <f:facet name="header">
+                    <h:outputText value="#{messages['serviceOrder.dateCreated']}"/>
+                </f:facet>
+                <h:outputText value="#{saleIter.dateCreated}">
+                	<s:convertDateTime pattern="#{customizer.dateTimePattern}" />
+                </h:outputText> 
+            </rich:column>
+           	<rich:column >
+                <f:facet name="header">
+                    <h:outputText value="cena"/>
+                </f:facet>
+                <h:outputText value="#{saleIter.totalPriceExclVatValue}">
+                	<f:convertNumber pattern="#{customizer.pricePattern}"/>
+                </h:outputText> 
+            </rich:column>
+            <rich:column >
+                <f:facet name="header">
+                    <h:outputText value="#{messages['sale.state']}"/>
+                </f:facet>
+                <h:outputText value="#{messages[saleIter.state.keyName]}">                	
+                </h:outputText> 
+            </rich:column>
+           	
+			<rich:column >
+                <f:facet name="header">
+                    <h:outputText value="#{messages['user.user']}"/>
+                </f:facet>
+                <h:outputText value="#{saleIter.user.username}"/> 
+            </rich:column>
+             <f:facet name="footer">
+                <rich:datascroller id="ds" renderIfSinglePage="false" page="#{saleListPageIndex}"></rich:datascroller>
+            </f:facet>       
+            </rich:dataTable>
+                      <rich:jQuery selector=".c#{sale.id}"	query="parent().addClass('active-row')" /> 
+        	<h:commandButton action="#{saleAction.newSale()}" value="Nový pokladní doklad" />
+     		<s:button  value="Vytiskout seznam dokladů"  action="#{saleReportAction.doPdfReport()}" rendered="#{sales.size &gt;0 and sales.size &lt; 30}"/>
+        </h:form>
+    </rich:panel>   	
+ </ui:define>
+</ui:composition>

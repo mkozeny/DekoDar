@@ -1,0 +1,331 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j" template="layout/template.xhtml">
+	<ui:define name="body">
+
+
+		
+		<rich:panel style="width:100%">
+			<f:facet name="header">Pokladní doklad číslo:  #{sale.id}</f:facet>
+			<h:form id="insertForm" >
+				<h:panelGrid columns="5" styleClass="formTable" style="width: 95%" cellspacing="10">
+					<f:facet name="header">
+						<h:outputText value="Produkty" />
+					</f:facet>
+					<h:panelGroup>
+					<s:label styleClass="panelGridLabel">
+						<h:outputText value="#{messages['product.pnc']}" />
+					</s:label>					
+						<s:decorate template="edit.xhtml">
+							<h:inputText id="productId" value="#{saleAction.productId}"	styleClass="inputText"  required="true"/>						
+							<h:commandButton action="findProductId" value="..." immediate="true"  style="margin-left:5px;"/>
+							<h:commandButton	action="#{saleAction.showProductDetail(saleAction.productId)}"	value="..?"   style="margin:0px;"/>
+						</s:decorate>
+					</h:panelGroup>
+					
+					<h:panelGroup>
+						<s:label styleClass="panelGridLabel">
+							<h:outputText value="#{messages['serviceOrderLine.quantity']}" />
+						</s:label>
+						<s:decorate template="edit.xhtml">
+							<h:inputText value="#{saleAction.quantity}" styleClass="inputText" required="true" autocomplete="off"></h:inputText>
+						</s:decorate>
+					</h:panelGroup>
+					
+					<h:panelGroup>
+						<s:label styleClass="panelGridLabel">
+							<h:outputText value="#{messages['vat.vat']}" />
+						</s:label>
+							<h:outputText value="#{vatIter.vatCode}" />
+						<s:decorate template="edit.xhtml">
+							<h:selectOneMenu value="#{saleAction.vat}">
+								<s:selectItems value="#{sale.accountingPeriod.allVats}" var="vatIter"	label="#{vatIter.vatCode}" />
+								<s:convertEntity />
+							</h:selectOneMenu>
+						</s:decorate>
+					</h:panelGroup>
+					
+					
+					 <h:commandButton   id="addProduct" action="#{saleAction.addNewSaleLine()}"	value="přidat produkt" >
+					 		<s:defaultAction/>
+					 </h:commandButton>			
+				</h:panelGrid>
+				
+			</h:form>
+		
+		<rich:separator height="1"  style="margin-top: 10px; margin-bottom: 10px"/>
+
+			<h:form id="saleForm">
+				<s:validateAll>
+					<table cellspacing="10">
+					<tr>
+							<td colspan="2">
+							<rich:dataTable value="#{sale.saleLines}"	var="saleLineIter" owKeyVar="row">
+								<f:facet name="header">
+									<h:outputText value="Seznam účtovaných položek" />
+								</f:facet>
+
+								<rich:column>
+									<f:facet name="header">
+										<h:outputText
+											value="#{messages['serviceOrderLineIter.lineNumber']}" />
+									</f:facet>
+									<h:outputText value="#{saleLineIter.lineNumber}" />
+								</rich:column>
+								<rich:column>
+									<f:facet name="header">
+										<h:outputText value="#{messages['product.pnc']}" />
+									</f:facet>
+									<s:decorate template="edit.xhtml">
+										<h:commandLink
+											action="#{saleAction.showProductDetail(saleLineIter.product.id)}"
+											id="productId" value="#{saleLineIter.product.id}" />
+									</s:decorate>
+								</rich:column>
+								<rich:column>
+									<f:facet name="header">
+										<h:outputText value="#{messages['popis']}" />
+									</f:facet>
+									<s:decorate template="edit.xhtml">
+										<h:inputText id="description-#{row}"
+											value="#{saleLineIter.description}" styleClass="inputText" />
+									</s:decorate>
+								</rich:column>
+								<rich:column>
+									<f:facet name="header">
+										<h:outputText value="#{messages['product.model']}" />
+									</f:facet>
+									<h:outputText id="description-#{row}"	value="#{saleLineIter.product.model}" />
+									
+									
+								</rich:column>
+								
+								<rich:column>
+									<f:facet name="header">
+										<h:outputText value="#{messages['serviceOrderLine.quantity']}" />
+									</f:facet>
+									<h:outputText value="#{saleLineIter.quantity}" />
+								</rich:column>
+								<rich:column>
+									<f:facet name="header">
+										<h:outputText
+											value="#{messages['serviceOrderLine.unitPrice']}" />
+									</f:facet>
+									<s:decorate template="edit.xhtml">
+										<h:inputText  converter="#{bigDecimalConverter}" value="#{saleLineIter.price.amount}"	styleClass="inputText">										  									   											
+											<a4j:support event="onkeyup"
+												actionListener="#{saleAction.changePriceTableLine(saleLineIter)}"
+												reRender="linePrice,prices" ignoreDupResponses="true"
+												 />												 
+										</h:inputText>
+									</s:decorate>
+
+								</rich:column>
+								<rich:column>
+									<f:facet name="header">
+										<h:outputText value="#{messages['sale.discount']}" />
+									</f:facet>
+
+									<s:decorate template="edit.xhtml">
+										<h:inputText  converter="#{bigDecimalConverter}" value="#{saleLineIter.discount}"
+											styleClass="inputText" style="width: 30px;">
+											<a4j:support event="onkeyup"
+												actionListener="#{saleAction.changePriceTableLine(saleLineIter)}"
+												reRender="linePrice,prices,buttons"
+												ignoreDupResponses="true"  />
+										</h:inputText>
+
+									</s:decorate>
+
+
+								</rich:column>
+								
+								
+								 <rich:column>
+	                    <f:facet name="header">
+	                      <h:outputText value="#{messages['sale.discount']} na řádek" />
+	                    </f:facet>
+	                    <s:decorate template="edit.xhtml">
+	                      <h:outputText value="#{saleLineIter.lineDiscountValue.amount}" styleClass="inputText">
+	                      <f:convertNumber pattern="#{customizer.pricePattern}" />
+	                      </h:outputText>
+	                    </s:decorate>
+	                  </rich:column>
+
+								<rich:column>
+									<f:facet name="header">
+										<h:outputText value="#{messages['vat.vat']}" />
+									</f:facet>
+									<h:outputText value="#{saleLineIter.price.vat.vatCode}"/>									
+								</rich:column>
+								<rich:column>
+									<f:facet name="header">
+										<h:outputText id="line-#{row}"
+											value="#{messages['serviceOrderLine.linePrice']}" >
+											<f:convertNumber pattern="#{customizer.pricePattern}" />
+											</h:outputText>
+									</f:facet>
+
+									<h:outputText value="#{saleLineIter.linePrice.priceExclVat}"
+										id="linePrice" styleClass="inputText" style="widht: 30px;">
+										<f:convertNumber pattern="#{customizer.pricePattern}" />
+									</h:outputText>
+								</rich:column>
+								<rich:column>
+									<h:commandButton
+										action="#{saleAction.deleteSaleLine(saleLineIter)}"
+										value="#{messages['button.delete']}"
+										onclick="return confirm('#{messages['button.areYouSure']}')" />
+								</rich:column>
+							</rich:dataTable></td>
+						</tr>
+					
+						<tr>
+							<td valign="top">
+								<h:panelGrid columns="2"	styleClass="formTable">
+								<f:facet name="header">
+									<h:outputText value="Doplňující údaje" />
+								</f:facet>
+								<s:label styleClass="panelGridLabel">
+									<h:outputText value="#{messages['sale.id']}" />
+								</s:label>
+								
+									<h:outputText value="#{sale.id}" />
+								
+
+								<s:label styleClass="panelGridLabel">
+									<h:outputText value="#{messages['sale.dateCreated']}" />
+								</s:label>
+								
+									<h:outputText value="#{sale.dateCreated}" >
+										<f:convertDateTime pattern="#{customizer.dateTimePattern}"/>
+									</h:outputText>
+																
+								
+								
+								<s:label  styleClass="panelGridLabel">
+									<h:outputText value="#{messages['sale.state']}" />
+								</s:label>
+								
+									<h:outputText value="#{messages[sale.state.keyName]}" />
+									
+								<s:label  styleClass="panelGridLabel">
+									<h:outputText value="#{messages['sale.paymentType']}" />
+								</s:label>
+								
+								<h:outputText value="#{messages[sale.paymentType.keyName]}" />
+																
+
+								<s:label styleClass="panelGridLabel">
+									<h:outputText value="#{messages['sale.discount']}" />
+								</s:label>
+								<s:decorate template="edit.xhtml">
+									<h:inputText  converter="#{bigDecimalConverter}" value="#{sale.discount}" styleClass="inputText">
+										
+										<a4j:support event="onkeyup"
+											actionListener="#{saleAction.changeDiscount(sale.discount)}"
+											reRender="prices,buttons" ignoreDupResponses="true" ajaxSingle="true"
+											 />
+									</h:inputText>
+								</s:decorate>
+								<s:label styleClass="panelGridLabel">
+									<h:outputText value="#{messages['sale.note']}" />
+								</s:label>
+								<h:inputTextarea value="#{sale.note}"  />
+								
+								
+								
+							</h:panelGrid>	
+							
+							</td>
+							<td valign="top">
+							
+							<h:panelGrid columns="2"
+									styleClass="formTable" id="prices">
+									<f:facet name="header">
+										<h:outputText value="Celkem" />
+									</f:facet>
+									<s:label styleClass="panelGridLabel">
+										<h:outputText
+											value="#{messages['serviceOrder.totalPriceExlVat']}" />
+									</s:label>
+									<h:outputText value="#{sale.totalPriceExclVatValue}">
+										<f:convertNumber pattern="#{customizer.pricePattern}" />
+									</h:outputText>
+									
+	
+									<s:label styleClass="panelGridLabel">
+										<h:outputText value="#{messages['serviceOrder.totalVat']}" />
+	
+	
+									</s:label>
+									<h:outputText value="#{sale.totalVatValue}">
+										<f:convertNumber pattern="#{customizer.pricePattern}" />
+									</h:outputText>
+									
+									
+									
+									
+									<s:label styleClass="panelGridLabel">
+										<h:outputText
+											value="#{messages['serviceOrder.totalPriceInclVat']}" />
+									</s:label>									
+									<h:outputText value="#{sale.totalPriceInclVatValue}" style="font-weight: bold;">
+										<f:convertNumber pattern="#{customizer.pricePattern}" />
+									</h:outputText>	
+								</h:panelGrid> 
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2"><rich:separator height="1" /></td>
+						</tr>
+
+
+						
+						<tr>
+
+							<td colspan="2">
+							
+							
+														
+							<h:panelGroup id="buttons">								
+								    <h:commandButton action="#{saleAction.saveSale()}"	value="Uložit pokladní doklad"	rendered="#{sale.id!=null}" />
+									<h:commandButton action="#{saleAction.process()}" value="Zpracovat"/>									
+									<h:commandButton action="#{saleAction.cancel()}" value="Zrušit doklad" onclick="return confirm('#{messages['button.areYouSureToCancel']}')"/>
+								
+									<h:commandButton id="printButton" action="#{saleReportAction.doPdfReport()}"	value="Vytisknout doklad (Ctrl+p)"/>
+								
+
+								
+
+									<s:button value="#{messages['button.backToList']}" action="back" propagation="end"/>
+									<s:button id="newSaleButton" style="flow: right;" action="#{saleAction.newSale()}" value="Nový pokladní doklad (Ctrl+n)"  propagation="none" rendered="#{sale.state != 'OPENED'}"  />		
+									
+								<a4j:status>								
+									<f:facet name="start">
+										<h:graphicImage value="/img/spinner.gif" />
+									</f:facet>
+								</a4j:status>								
+								
+								  <rich:hotKey  key="ctrl+n" handler="#{rich:element('newSaleButton')}.click();" timing="onload" />
+								  <rich:hotKey  key="ctrl+p" handler="#{rich:element('printButton')}.click();" timing="onload" />
+								
+							</h:panelGroup></td>
+						</tr>
+					</table>
+				</s:validateAll>
+															
+				</h:form>
+
+
+
+		</rich:panel>
+		
+	</ui:define>
+</ui:composition>

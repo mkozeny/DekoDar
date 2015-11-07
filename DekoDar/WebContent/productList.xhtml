@@ -1,0 +1,99 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:a4j="http://richfaces.org/a4j"
+    template="layout/template-filter.xhtml">
+
+<ui:define name="leftArea">
+     <rich:panel styleClass="filtering" headerClass="filterTitle">    
+            <f:facet name="header">#{messages['product.search']}</f:facet>
+	 			<h:form id="productFilterForm">
+	 					<h:panelGrid id="panel" columns="1"  styleClass="filterText">
+	 						<s:label for="idInput" value="#{messages['product.id']}"/>
+	    					<h:inputText styleClass="filterInput" value="#{productSearchAction.id}" id="idInput"></h:inputText>
+	 					  
+	  						<s:label for="modelInput" value="#{messages['product.model']}"/>
+	    					<h:inputText styleClass="filterInput" value="#{productSearchAction.model}" id="modelInput"></h:inputText>
+	    					
+	    				</h:panelGrid>
+	    				<h:commandButton style="vertical-align:middle;" action="#{productSearchAction.searchProducts()}" value="#{messages['button.search']}" />
+	    				<a4j:commandButton value="vymazat filtr (ctrl+f)" id="clearFilterButton" immediate="true"/>
+	    					    					    				    					         
+				</h:form>	
+	<rich:hotKey  key="ctrl+f" handler="#{rich:element('clearFilterButton')}.click();" timing="onload" />		
+	<rich:jQuery selector="#clearFilterButton" query="click(function(){clearFilterText()})"/>	
+	<rich:jQuery selector="#productFilterForm input[type=text]" name="clearFilterText"   timing="onJScall" query="val('')"/>	
+		
+				    								         		
+	</rich:panel> 
+    
+</ui:define>                
+
+
+<ui:define name="seznam">       
+
+
+   
+    <h:form id="productForm">
+       <rich:dataTable id="productTable" value="#{products}" var="productIter"   rows="#{customizer.pageSize}" reRender="ds">            
+            <rich:column sortBy="#{productIter.id}"> 
+                <f:facet name="header">
+                    <h:outputText value="#{messages['product.id']}"/>
+                </f:facet>  
+                <s:link rendered="#{mode=='productCrud'}" action="#{productAction.selectProduct(productIter)}" value="#{productIter.id}" />  
+                <s:link rendered="#{mode=='productSaleOperation'}" action="#{saleAction.selectProduct(productIter)}" value="#{productIter.id}" />
+                
+            </rich:column>
+            
+            <rich:column sortBy="#{productIter.model}">
+                <f:facet name="header">
+                    <h:outputText value="#{messages['product.model']}"/>
+                </f:facet>
+                <h:outputText value="#{productIter.model}"/> 
+            </rich:column>
+            
+            <rich:column sortBy="#{productIter.model}">
+                <f:facet name="header">
+                   <h:outputText value="#{messages['product.recommendedPrice']}"/>
+                </f:facet>
+                <h:outputText value="#{productIter.price}" >
+                	<f:convertNumber  pattern="#{customizer.pricePattern}"/>
+                </h:outputText> 
+            </rich:column>
+            
+            
+            
+                 
+							
+									
+							
+            
+            <f:facet name="footer">
+                <rich:datascroller id="ds"  page="#{productListPageIndex}"  action="#{productSearchAction.searchProducts()}"></rich:datascroller>
+            </f:facet>
+        </rich:dataTable>
+        <rich:jQuery selector="#productTable tr:odd"
+					query="addClass('odd-row')" />
+				<rich:jQuery selector="#productTable tr:even:not(:first)"
+					query="addClass('even-row')" />
+				<rich:jQuery selector="#productTable tr:not(:first)"
+					query="mouseover(function(){jQuery(this).addClass('active-row')})" />
+
+				<rich:jQuery selector="#productTable tr:not(:first)"
+					query="mouseout(function(){jQuery(this).removeClass('active-row')})" />
+					          <rich:jQuery selector=".c#{product.id}"	query="parent().addClass('active-row')" /> 
+        <s:button value="vytvořit produkt" action="#{productAction.newProduct()}"/>
+        <h:commandButton value="#{messages['button.back']}" action="back"/>
+        
+    </h:form>
+	
+	  
+		       
+	
+ </ui:define>
+</ui:composition>
