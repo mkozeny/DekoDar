@@ -20,8 +20,16 @@
 	  						<s:label for="modelInput" value="#{messages['product.model']}"/>
 	    					<h:inputText styleClass="filterInput" value="#{productSearchAction.model}" id="modelInput"></h:inputText>
 	    					
+	    					<s:label for="categoryInput" value="#{messages['product.category']}"/>
+	    					<rich:tree id="categoryInput" style="width:200px" 
+	    					nodeSelectListener="#{productSearchAction.processSelection}" ajaxSubmitSelection="true" switchType="client">
+            <rich:recursiveTreeNodesAdaptor roots="#{productSearchAction.productCategories}" var="item" nodes="#{item.subcategories}" />
+        </rich:tree>
+	    					
 	    				</h:panelGrid>
-	    				<h:commandButton style="vertical-align:middle;" action="#{productSearchAction.searchProducts()}" value="#{messages['button.search']}" />
+	    				<h:commandButton style="vertical-align:middle;" action="#{productSearchAction.searchProducts()}" value="#{messages['button.search']}" >
+	    					<f:param name="mode" value="productCrud"/>
+	    				</h:commandButton>
 	    				<a4j:commandButton value="vymazat filtr (ctrl+f)" id="clearFilterButton" immediate="true"/>
 	    					    					    				    					         
 				</h:form>	
@@ -31,7 +39,7 @@
 		
 				    								         		
 	</rich:panel> 
-    
+	
 </ui:define>                
 
 
@@ -45,7 +53,7 @@
                 <f:facet name="header">
                     <h:outputText value="#{messages['product.id']}"/>
                 </f:facet>  
-                <s:link rendered="#{mode=='productCrud'}" action="#{productAction.selectProduct(productIter)}" value="#{productIter.id}" />  
+                <s:link rendered="#{mode=='productCrud' || mode==null}" action="#{productAction.selectProduct(productIter)}" value="#{productIter.id}" />  
                 <s:link rendered="#{mode=='productSaleOperation'}" action="#{saleAction.selectProduct(productIter)}" value="#{productIter.id}" />
                 
             </rich:column>

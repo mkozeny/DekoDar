@@ -2,6 +2,9 @@ package cz.mkozeny.dekodar.session.product;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.ejb.Remove;
@@ -21,8 +24,13 @@ import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.datamodel.DataModel;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.log.Log;
+import org.richfaces.component.UITree;
+import org.richfaces.component.html.HtmlTree;
+import org.richfaces.event.NodeSelectedEvent;
+import org.richfaces.model.TreeRowKey;
 
 import cz.mkozeny.dekodar.entity.Product;
+import cz.mkozeny.dekodar.entity.ProductCategory;
 
 @Stateful
 @Name("productSearchAction")
@@ -39,6 +47,14 @@ public class ProductSearchActionBean implements ProductSearchAction,
 	@Out(required = false)
 	@In(required = false)
 	Integer productListPageIndex = 1;
+	
+	private Collection<ProductCategory> productCategories;
+	
+	private List<ProductCategory> allProductCategories = new ArrayList<ProductCategory>();
+
+	private ProductCategory selectedNode;
+
+	private List<ProductCategory> selectedNodeChildren = new ArrayList<ProductCategory>();
 
 	@Logger
 	private Log log;
@@ -78,6 +94,19 @@ public class ProductSearchActionBean implements ProductSearchAction,
 
 		if (model.length() > 0)
 			whereConditions.add(" p.model like '" + model + "%'");
+		
+		if(selectedNodeChildren.size() > 0) {
+			Iterator<ProductCategory> selectedCategories = selectedNodeChildren.iterator();
+			String cond = "p.productCategory.id IN (";
+			while (selectedCategories.hasNext())
+    		{
+    		  Long token = selectedCategories.next().getId();
+    		  cond = cond + token;
+    		  if (selectedCategories.hasNext()) cond = cond + ", ";
+    		  
+    		}
+    		 whereConditions.add(cond + ")");
+		}
 
 		int counter = 0;
 		for (String condition : whereConditions) {
@@ -91,6 +120,47 @@ public class ProductSearchActionBean implements ProductSearchAction,
 
 		log.info("query products: " + query);
 		products = em.createQuery(query).setMaxResults(1500).getResultList();
+	}
+	
+	public Collection<ProductCategory> getProductCategories() {
+		if (productCategories == null) {
+			ProductCategory rootProductCategory = (ProductCategory) em
+					.createQuery(
+							"select p from ProductCategory p where p.type='ROOT'")
+					.getSingleResult();
+			this.allProductCategories.add(rootProductCategory);
+			processNodeChildren(rootProductCategory, allProductCategories);
+			return productCategories = Collections
+					.singletonList(rootProductCategory);
+		}
+		return productCategories;
+	}
+
+	public void processSelection(NodeSelectedEvent event) {
+		HtmlTree tree = (HtmlTree) event.getComponent();
+		ProductCategory menuNode = (ProductCategory) tree.getRowData();
+		selectedNode = menuNode;
+		selectedNodeChildren.clear();
+		selectedNodeChildren.add(selectedNode);
+		processNodeChildren(selectedNode, selectedNodeChildren);
+		System.out.println(selectedNodeChildren);
+		// productSearchAction.searchProducts();
+	}
+
+	private void processNodeChildren(ProductCategory parent,  List<ProductCategory> nodeChildren) {
+		for (ProductCategory category:parent.getSubcategories()) {
+			nodeChildren.add(category);
+			processNodeChildren(category, nodeChildren);
+		}
+	}
+
+	public Boolean adviseNodeOpened(UITree tree) {
+		Object key = tree.getRowKey();
+		TreeRowKey treeRowKey = (TreeRowKey) key;
+		if (treeRowKey == null || treeRowKey.depth() <= 1) {
+			return Boolean.TRUE;
+		}
+		return false;
 	}
 
 	@Observer("productUpdated")
@@ -106,11 +176,17 @@ public class ProductSearchActionBean implements ProductSearchAction,
 
 		}
 	}
+	
+	public List<ProductCategory> getAllProductCategories() {
+		return allProductCategories;
+	}
 
 	@Remove
 	@Destroy
 	public void destroy() {
 
 	}
+
+	
 
 }

@@ -4,11 +4,15 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 import org.hibernate.validator.Length;
+import org.hibernate.validator.NotNull;
 
 @Entity
 public class ProductCategory {
@@ -22,16 +26,18 @@ public class ProductCategory {
 		CHILD;
 	}
 	
+	@Enumerated(EnumType.STRING)
+	@NotNull
 	private Type type;
 	
 	@Length(max = 100)
 	private String name;
 	
-	@OneToMany
+	@OneToMany(fetch = FetchType.EAGER)
 	private Collection<ProductCategory> subcategories = new ArrayList<ProductCategory>();
 	
-	@OneToMany
-	private Collection<Product> products = new ArrayList<Product>();
+//	@OneToMany
+//	private Collection<Product> products = new ArrayList<Product>();
 
 	public Long getId() {
 		return id;
@@ -65,13 +71,13 @@ public class ProductCategory {
 		this.subcategories = subcategories;
 	}
 
-	public Collection<Product> getProducts() {
-		return products;
-	}
-
-	public void setProducts(Collection<Product> products) {
-		this.products = products;
-	}
+//	public Collection<Product> getProducts() {
+//		return products;
+//	}
+//
+//	public void setProducts(Collection<Product> products) {
+//		this.products = products;
+//	}
 
 	@Override
 	public int hashCode() {
@@ -98,5 +104,7 @@ public class ProductCategory {
 		return true;
 	}
 	
-	
+	public String toString() {
+        return this.name;
+    }
 }

@@ -2,6 +2,8 @@ package cz.mkozeny.dekodar.entity;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 
 import javax.persistence.Entity;
@@ -9,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.TableGenerator;
 import javax.persistence.Transient;
@@ -39,6 +42,9 @@ public class Product implements Serializable {
 	private Date createDate;
 
 	private Double price = new Double(0.0);
+	
+	@ManyToOne
+	private ProductCategory productCategory;
 
 	public Long getId() {
 		return id;
@@ -97,6 +103,14 @@ public class Product implements Serializable {
 
 	public void setCreateDate(Date createDate) {
 		this.createDate = createDate;
+	}
+	
+	public ProductCategory getProductCategory() {
+		return productCategory;
+	}
+	
+	public void setProductCategory(ProductCategory productCategory) {
+		this.productCategory = productCategory;
 	}
 
 	public boolean equals(Object obj) {

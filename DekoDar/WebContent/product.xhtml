@@ -38,7 +38,16 @@
 										<h:outputText value="#{product.id}" required="true"
 											styleClass="inputText" />
 									</s:decorate>
-
+									
+									<s:label styleClass="panelGridLabel">
+										<h:outputText value="#{messages['product.category']}" />
+									</s:label>
+									<s:decorate template="edit.xhtml">
+									<h:selectOneMenu value="#{product.productCategory}">
+										<s:selectItems value="#{productSearchAction.allProductCategories}" var="categoryIter"	label="#{categoryIter.name}" />
+										<s:convertEntity />
+									</h:selectOneMenu>
+									</s:decorate>
 
 									<s:label styleClass="panelGridLabel">
 										<h:outputText value="#{messages['product.model']}" />
