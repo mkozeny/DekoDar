@@ -22,7 +22,10 @@
 			<redirect view-id="/product.xhtml" />
 		</navigation>
 		<navigation from-action="#{saleAction.selectProduct(productIter)}">
-		    <redirect view-id="/sale.xhtml"/>
+			<redirect view-id="/sale.xhtml" />
+		</navigation>
+		<navigation from-action="#{stockOperationAction.selectProduct(productIter)}">
+			<redirect view-id="/stockOperation.xhtml" />
 		</navigation>
 		<navigation from-action="#{productAction.newProduct()}">
 			<redirect view-id="/product.xhtml" />
@@ -72,9 +75,47 @@
 		</navigation>
 	</page>
 
+	<page login-required="true" view-id="/stockOperation.xhtml">
+		<param name="stockOperationMode" />
+		<navigation from-action="findPnc">
+			<redirect view-id="/productList.xhtml">
+				<param name="mode" value="productStockOperation" />
+			</redirect>
+		</navigation>
+		<navigation
+			from-action="#{stockOperationAction.showProductDetail(stockOperaitonFormLineIter.pnc)}">
+			<rule if-outcome="OK">
+				<redirect view-id="/product.xhtml">
+					<param name="mode" value="productStockOperation" />
+				</redirect>
+			</rule>
+		</navigation>
+	</page>
+
+	<page login-required="true" view-id="/stockOperationList.xhtml">
+		<navigation from-action="#{stockOperationAction.newStockOperationForm()}">
+			<redirect view-id="/stockOperation.xhtml" />
+		</navigation>
+		<navigation
+			from-action="#{productAction.selectProductById(stockOperaitonIter.pnc)}">
+			<redirect view-id="/product.xhtml">
+				<param name="mode" value="stockOperationList" />
+			</redirect>
+		</navigation>
+	</page>
+
 	<page login-required="true" view-id="/product.xhtml">
+		<param name="mode" />
 		<navigation from-action="back">
-			<redirect view-id="/productList.xhtml" />
+			<rule if="#{mode=='productCrud'}">
+				<redirect view-id="/productList.xhtml" />
+			</rule>
+			<rule if="#{mode=='productStockOperation'}">
+				<redirect view-id="/stockOperation.xhtml" />
+			</rule>
+			<rule if="#{mode=='stockOperationList'}">
+		    	<redirect view-id="/stockOperationList.xhtml"/>
+		   </rule>
 		</navigation>
 	</page>
 

@@ -73,15 +73,21 @@
    TARGET="#xproduct.xhtml" model-entity="SeamPagesDiagramItemOutput"/>
   <output ID="/sale.xhtml" NAME="output1" PATH="/sale.xhtml"
    TARGET="#xsale.xhtml" model-entity="SeamPagesDiagramItemOutput"/>
-  <output ID="/product.xhtml" NAME="output2" PATH="/product.xhtml"
+  <output ID="/stockOperation.xhtml" NAME="output2"
+   PATH="/stockOperation.xhtml" TARGET="#xstockOperation.xhtml" model-entity="SeamPagesDiagramItemOutput"/>
+  <output ID="/product.xhtml" NAME="output3" PATH="/product.xhtml"
    TARGET="#xproduct.xhtml" model-entity="SeamPagesDiagramItemOutput"/>
-  <output ID="/sale.xhtml" NAME="output3" PATH="/sale.xhtml"
+  <output ID="/sale.xhtml" NAME="output4" PATH="/sale.xhtml"
    TARGET="#xsale.xhtml" model-entity="SeamPagesDiagramItemOutput"/>
  </item>
  <item ID="#product.xhtml" NAME="#xproduct.xhtml" PATH="/product.xhtml"
   SHAPE="376,953,0,0" TYPE="page" model-entity="SeamPagesDiagramItem">
   <output ID="/productList.xhtml" NAME="output"
    PATH="/productList.xhtml" TARGET="#xproductList.xhtml" model-entity="SeamPagesDiagramItemOutput"/>
+  <output ID="/stockOperation.xhtml" NAME="output1"
+   PATH="/stockOperation.xhtml" TARGET="#xstockOperation.xhtml" model-entity="SeamPagesDiagramItemOutput"/>
+  <output ID="/stockOperationList.xhtml" NAME="output2"
+   PATH="/stockOperationList.xhtml" TARGET="#xstockOperationList.xhtml" model-entity="SeamPagesDiagramItemOutput"/>
  </item>
  <item ID="#saleList.xhtml" NAME="#xsaleList.xhtml"
   PATH="/saleList.xhtml" SHAPE="24,1081,0,0" TYPE="page" model-entity="SeamPagesDiagramItem">
@@ -102,5 +108,19 @@
    TARGET="#xproduct.xhtml" model-entity="SeamPagesDiagramItemOutput"/>
   <output ID="/saleList.xhtml" NAME="output4" PATH="/saleList.xhtml"
    TARGET="#xsaleList.xhtml" model-entity="SeamPagesDiagramItemOutput"/>
+ </item>
+ <item ID="#stockOperation.xhtml" NAME="#xstockOperation.xhtml"
+  PATH="/stockOperation.xhtml" SHAPE="88,1329,0,0" TYPE="page" model-entity="SeamPagesDiagramItem">
+  <output ID="/productList.xhtml" NAME="output"
+   PATH="/productList.xhtml" TARGET="#xproductList.xhtml" model-entity="SeamPagesDiagramItemOutput"/>
+  <output ID="/product.xhtml" NAME="output1" PATH="/product.xhtml"
+   TARGET="#xproduct.xhtml" model-entity="SeamPagesDiagramItemOutput"/>
+ </item>
+ <item ID="#stockOperationList.xhtml" NAME="#xstockOperationList.xhtml"
+  PATH="/stockOperationList.xhtml" SHAPE="88,1585,0,0" TYPE="page" model-entity="SeamPagesDiagramItem">
+  <output ID="/stockOperation.xhtml" NAME="output"
+   PATH="/stockOperation.xhtml" TARGET="#xstockOperation.xhtml" model-entity="SeamPagesDiagramItemOutput"/>
+  <output ID="/product.xhtml" NAME="output1" PATH="/product.xhtml"
+   TARGET="#xproduct.xhtml" model-entity="SeamPagesDiagramItemOutput"/>
  </item>
 </diagram>

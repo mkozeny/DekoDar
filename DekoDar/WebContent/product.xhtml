@@ -75,11 +75,8 @@
 									<s:label styleClass="panelGridLabel">
 										<h:outputText value="#{messages['product.availAbility']}" />
 									</s:label>
-									<s:decorate template="edit.xhtml">
-										<h:inputText value="#{product.availAbility.availAbility}"
-											styleClass="inputText" />
-									</s:decorate>
-
+									<h:outputText value="#{product.availAbility.availAbility}"/>
+									
 									<s:label styleClass="panelGridLabel">
 										<h:outputText value="#{messages['product.createDate']}">
 										</h:outputText>

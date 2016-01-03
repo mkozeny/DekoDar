@@ -17,9 +17,11 @@
       <ui:insert name="head"/>
    </head>
    <body>
+     <h:form id="dropDownMenuForm">
       <ui:include src="menu.xhtml">
          <ui:param name="projectName" value="DekoDar"/>
       </ui:include>
+      </h:form>
       <div class="body">
          <h:messages id="messages" globalOnly="true" styleClass="message"
             errorClass="errormsg" infoClass="infomsg" warnClass="warnmsg"

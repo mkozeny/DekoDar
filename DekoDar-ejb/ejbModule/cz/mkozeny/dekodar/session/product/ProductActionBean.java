@@ -41,6 +41,11 @@ public class ProductActionBean implements ProductAction {
 
 	@PersistenceContext
 	private EntityManager em;
+	
+	@Begin(join=true)
+    public void selectProductById(Long pnc) {
+    	selectProduct(em.find(Product.class, pnc));
+    }
 
 	@Begin(join = true)
 	public void selectProduct(Product selectedProduct) {
@@ -63,6 +68,7 @@ public class ProductActionBean implements ProductAction {
 	public void addProduct() {
 		product.setCreateDate(new Date());
 		StockAvailAbility availAbility = product.getAvailAbility();
+		availAbility.setAvailAbility(0L);
 		em.persist(availAbility);
 		product.setAvailAbility(availAbility);
 		em.persist(product);

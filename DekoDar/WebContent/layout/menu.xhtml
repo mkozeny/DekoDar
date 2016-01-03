@@ -11,6 +11,22 @@
         <s:link id="menuProductListId" view="/productList.xhtml" value="Produkty" propagation="none" rendered="#{identity.loggedIn}">
         	<f:param name="mode" value="productCrud"/>
         </s:link>
+        
+        <rich:dropDownMenu>
+                <f:facet name="label">                
+                        <h:outputText value="sklad"  rendered="#{identity.loggedIn}"/>                
+                </f:facet>
+                <rich:menuItem submitMode="none">
+                    <s:link id="menuStockOperations" view="/stockOperationList.xhtml" value="zobrazit skladové operace" propagation="end">
+                    	<f:param name="mode" value="stockCrud"/>
+                    </s:link>	                                        
+                </rich:menuItem>
+                <rich:menuItem submitMode="none">
+                    <s:link id="menuAddStockOperation" view="/stockOperation.xhtml"  action="#{stockOperationAction.newStockOperationForm()}" value="skladové převody" propagation="end">
+                    </s:link>                    	                    
+                </rich:menuItem>
+            </rich:dropDownMenu>  
+        
         <s:link id="menuSaleListId" view="/saleList.xhtml" value="Doklady" propagation="none" rendered="#{identity.loggedIn}"/>
     </rich:toolBarGroup>
     <!-- @newMenuItem@ -->

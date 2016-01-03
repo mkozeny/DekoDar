@@ -55,7 +55,7 @@
                 </f:facet>  
                 <s:link rendered="#{mode=='productCrud' || mode==null}" action="#{productAction.selectProduct(productIter)}" value="#{productIter.id}" />  
                 <s:link rendered="#{mode=='productSaleOperation'}" action="#{saleAction.selectProduct(productIter)}" value="#{productIter.id}" />
-                
+                <s:link rendered="#{mode=='productStockOperation'}" action="#{stockOperationAction.selectProduct(productIter)}" value="#{productIter.id}" />
             </rich:column>
             
             <rich:column sortBy="#{productIter.model}">
