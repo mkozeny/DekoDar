@@ -214,6 +214,8 @@ public class ProductSearchActionBean implements ProductSearchAction,
 			}
 			em.remove(em.merge(selectedProductCategory));
 			fetchProductCategories();
+			productCategory = null;
+			selectedProductCategory = null;
 		}
 	}
 	
