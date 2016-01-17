@@ -11,7 +11,10 @@ import javax.ejb.Remove;
 import javax.ejb.Stateful;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
+import org.hibernate.Session;
+import org.jacorb.transaction.Sleeper;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Destroy;
 import org.jboss.seam.annotations.Factory;
@@ -43,16 +46,18 @@ public class ProductSearchActionBean implements ProductSearchAction,
 
 	private String id = "";
 	private String model = "";
-	
+
 	@Out(required = false)
 	@In(required = false)
 	Integer productListPageIndex = 1;
-	
+
 	private Collection<ProductCategory> productCategories;
-	
+
 	private List<ProductCategory> allProductCategories = new ArrayList<ProductCategory>();
 
-	private ProductCategory selectedNode;
+	private ProductCategory selectedProductCategory;
+
+	private ProductCategory productCategory;
 
 	private List<ProductCategory> selectedNodeChildren = new ArrayList<ProductCategory>();
 
@@ -94,18 +99,19 @@ public class ProductSearchActionBean implements ProductSearchAction,
 
 		if (model.length() > 0)
 			whereConditions.add(" p.model like '" + model + "%'");
-		
-		if(selectedNodeChildren.size() > 0) {
-			Iterator<ProductCategory> selectedCategories = selectedNodeChildren.iterator();
+
+		if (selectedNodeChildren.size() > 0) {
+			Iterator<ProductCategory> selectedCategories = selectedNodeChildren
+					.iterator();
 			String cond = "p.productCategory.id IN (";
-			while (selectedCategories.hasNext())
-    		{
-    		  Long token = selectedCategories.next().getId();
-    		  cond = cond + token;
-    		  if (selectedCategories.hasNext()) cond = cond + ", ";
-    		  
-    		}
-    		 whereConditions.add(cond + ")");
+			while (selectedCategories.hasNext()) {
+				Long token = selectedCategories.next().getId();
+				cond = cond + token;
+				if (selectedCategories.hasNext())
+					cond = cond + ", ";
+
+			}
+			whereConditions.add(cond + ")");
 		}
 
 		int counter = 0;
@@ -121,34 +127,38 @@ public class ProductSearchActionBean implements ProductSearchAction,
 		log.info("query products: " + query);
 		products = em.createQuery(query).setMaxResults(1500).getResultList();
 	}
-	
+
 	public Collection<ProductCategory> getProductCategories() {
 		if (productCategories == null) {
-			ProductCategory rootProductCategory = (ProductCategory) em
-					.createQuery(
-							"select p from ProductCategory p where p.type='ROOT'")
-					.getSingleResult();
-			this.allProductCategories.add(rootProductCategory);
-			processNodeChildren(rootProductCategory, allProductCategories);
-			return productCategories = Collections
-					.singletonList(rootProductCategory);
+			fetchProductCategories();
 		}
 		return productCategories;
+	}
+
+	private void fetchProductCategories() {
+		ProductCategory rootProductCategory = (ProductCategory) em.createQuery(
+				"select p from ProductCategory p where p.type='ROOT'")
+				.getSingleResult();
+		this.allProductCategories.add(rootProductCategory);
+		processNodeChildren(rootProductCategory, allProductCategories);
+		productCategories = Collections
+				.singletonList(rootProductCategory);
 	}
 
 	public void processSelection(NodeSelectedEvent event) {
 		HtmlTree tree = (HtmlTree) event.getComponent();
 		ProductCategory menuNode = (ProductCategory) tree.getRowData();
-		selectedNode = menuNode;
+		productCategory = selectedProductCategory = menuNode;
 		selectedNodeChildren.clear();
-		selectedNodeChildren.add(selectedNode);
-		processNodeChildren(selectedNode, selectedNodeChildren);
+		selectedNodeChildren.add(selectedProductCategory);
+		processNodeChildren(selectedProductCategory, selectedNodeChildren);
 		System.out.println(selectedNodeChildren);
 		// productSearchAction.searchProducts();
 	}
 
-	private void processNodeChildren(ProductCategory parent,  List<ProductCategory> nodeChildren) {
-		for (ProductCategory category:parent.getSubcategories()) {
+	private void processNodeChildren(ProductCategory parent,
+			List<ProductCategory> nodeChildren) {
+		for (ProductCategory category : parent.getSubcategories()) {
 			nodeChildren.add(category);
 			processNodeChildren(category, nodeChildren);
 		}
@@ -171,14 +181,57 @@ public class ProductSearchActionBean implements ProductSearchAction,
 				products.set(index, selectedProduct);
 			} catch (Exception ex) {
 				// ex.printStackTrace();
-			}
-			;
+			};
+		}
+	}
 
+	public void saveProductCategory() {
+		if (productCategory != null
+				&& productCategory.getId() != null) {
+			em.merge(productCategory);
+		} else {
+			em.persist(productCategory);
+			selectedProductCategory.getSubcategories().add(productCategory);
+			em.merge(selectedProductCategory);
+		}
+		fetchProductCategories();
+		productCategory = null;
+		selectedProductCategory = null;
+	}
+
+	public void removeProductCategory() {
+		if (selectedProductCategory != null
+				&& selectedProductCategory.getId() != null) {
+			Query productsOfProductCategoryQuery = em
+					.createQuery("select p from Product p where p. productCategory = :selectedCategory");
+			productsOfProductCategoryQuery.setParameter("selectedCategory",
+					selectedProductCategory);
+			List<Product> productsOfProductCategory = productsOfProductCategoryQuery
+					.getResultList();
+			for (Product product : productsOfProductCategory) {
+				product.setProductCategory(null);
+				em.merge(product);
+			}
+			em.remove(em.merge(selectedProductCategory));
+			fetchProductCategories();
 		}
 	}
 	
+	public void newProductCategory() {
+		productCategory = new ProductCategory();
+		productCategory.setType(ProductCategory.Type.CHILD);
+	}
+
 	public List<ProductCategory> getAllProductCategories() {
 		return allProductCategories;
+	}
+
+	public ProductCategory getProductCategory() {
+		return productCategory;
+	}
+
+	public ProductCategory getSelectedProductCategory() {
+		return selectedProductCategory;
 	}
 
 	@Remove
@@ -186,7 +239,5 @@ public class ProductSearchActionBean implements ProductSearchAction,
 	public void destroy() {
 
 	}
-
-	
 
 }

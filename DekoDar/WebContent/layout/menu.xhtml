@@ -7,10 +7,21 @@
     xmlns:rich="http://richfaces.org/rich">
     <rich:toolBarGroup>
         <h:outputText value="#{projectName}:"/>
-        <s:link id="menuHomeId" view="/home.xhtml" value="Home" propagation="none" rendered="#{identity.loggedIn}"/>
-        <s:link id="menuProductListId" view="/productList.xhtml" value="Produkty" propagation="none" rendered="#{identity.loggedIn}">
-        	<f:param name="mode" value="productCrud"/>
-        </s:link>
+        <rich:dropDownMenu>
+                <f:facet name="label">                
+                        <h:outputText value="produkty"  rendered="#{identity.loggedIn}"/>                
+                </f:facet>
+                <rich:menuItem submitMode="none">
+			        <s:link id="menuProductListId" view="/productList.xhtml" value="seznam produktů" propagation="none" rendered="#{identity.loggedIn}">
+			        	<f:param name="mode" value="productCrud"/>
+			        </s:link>
+		        </rich:menuItem>
+		        <rich:menuItem submitMode="none">
+			        <s:link id="menuProductCatsId" view="/productCategories.xhtml" value="produktové kategorie" propagation="none" rendered="#{identity.loggedIn}">
+			        	<f:param name="mode" value="productCats"/>
+			        </s:link>
+		        </rich:menuItem>
+        </rich:dropDownMenu>
         
         <rich:dropDownMenu>
                 <f:facet name="label">                
@@ -27,7 +38,7 @@
                 </rich:menuItem>
             </rich:dropDownMenu>  
         
-        <s:link id="menuSaleListId" view="/saleList.xhtml" value="Doklady" propagation="none" rendered="#{identity.loggedIn}"/>
+        <s:link id="menuSaleListId" view="/saleList.xhtml" value="pokladna" propagation="none" rendered="#{identity.loggedIn}"/>
     </rich:toolBarGroup>
     <!-- @newMenuItem@ -->
     <rich:toolBarGroup location="right">

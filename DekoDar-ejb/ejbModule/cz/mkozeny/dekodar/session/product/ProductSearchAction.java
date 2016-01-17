@@ -32,7 +32,17 @@ public interface ProductSearchAction {
 	
 	public void productUpdates(Product selectedProduct);
 	
+	public void newProductCategory();
+	
+	public void saveProductCategory();
+	
+	public void removeProductCategory();
+	
 	public List<ProductCategory> getAllProductCategories();
+	
+	public ProductCategory getProductCategory();
+	
+	public ProductCategory getSelectedProductCategory();
 	
 	public void destroy();
 
