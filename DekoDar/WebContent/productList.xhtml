@@ -96,6 +96,7 @@
 					query="mouseout(function(){jQuery(this).removeClass('active-row')})" />
 					          <rich:jQuery selector=".c#{product.id}"	query="parent().addClass('active-row')" /> 
         <s:button value="vytvořit produkt" action="#{productAction.newProduct()}"/>
+        <s:button rendered="#{mode=='productCrud' || mode==null}" id="printButton" action="#{productsBarCodePdfAction.doPdfReport()}"	value="Vytisknout čárové kódy (Ctrl+p)"/>
         <h:commandButton value="#{messages['button.back']}" action="back"/>
         
     </h:form>

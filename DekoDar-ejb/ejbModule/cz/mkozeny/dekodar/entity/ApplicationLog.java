@@ -33,10 +33,10 @@ public class ApplicationLog {
 	private String message;
 
 	@Length(max = 35)
-	private Long productId;
+	private String productId;
 
 	@Length(max = 60)
-	private Long saleId;
+	private String saleId;
 
 	public Long getId() {
 		return id;
@@ -82,19 +82,19 @@ public class ApplicationLog {
 		return Severity.values();
 	}
 
-	public Long getProductId() {
+	public String getProductId() {
 		return productId;
 	}
 
-	public void setProductId(Long productId) {
+	public void setProductId(String productId) {
 		this.productId = productId;
 	}
 
-	public Long getSaleId() {
+	public String getSaleId() {
 		return saleId;
 	}
 
-	public void setSaleId(Long saleId) {
+	public void setSaleId(String saleId) {
 		this.saleId = saleId;
 	}
 

@@ -25,9 +25,7 @@ import cz.mkozeny.dekodar.Price;
 public class Product implements Serializable {
 
 	@Id
-	@TableGenerator(name = "product_gen" , table = "generator_table", pkColumnName = "primary_key_column", valueColumnName = "Value_column", pkColumnValue = "product_id", allocationSize = 1, initialValue = 1)
-	@GeneratedValue(strategy = GenerationType.TABLE, generator = "product_gen")
-	private Long id;
+	private String id;
 
 	// SC010132
 	@Length(max = 35)
@@ -46,11 +44,11 @@ public class Product implements Serializable {
 	@ManyToOne
 	private ProductCategory productCategory;
 
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 

@@ -21,6 +21,7 @@ import org.jboss.seam.log.Log;
 import cz.mkozeny.dekodar.entity.Product;
 import cz.mkozeny.dekodar.entity.StockAvailAbility;
 import cz.mkozeny.dekodar.session.applicationlog.ApplicationLogAction;
+import cz.mkozeny.dekodar.session.utils.SeriesGenerator;
 
 @Stateful
 @Name("productAction")
@@ -42,16 +43,19 @@ public class ProductActionBean implements ProductAction {
 	@PersistenceContext
 	private EntityManager em;
 	
+	@In(create = true)
+	SeriesGenerator seriesGenerator;
+	
 	@Begin(join=true)
-    public void selectProductById(Long pnc) {
+    public void selectProductById(String pnc) {
     	selectProduct(em.find(Product.class, pnc));
     }
 
 	@Begin(join = true)
 	public void selectProduct(Product selectedProduct) {
 		log.info("Product #0 has been selected", selectedProduct.getId());
-		Long id = selectedProduct.getId();
-		product = (Product) em.createQuery("select p from Product p left join fetch p.availAbility where p.id=" + id).getSingleResult();
+		String id = selectedProduct.getId();
+		product = (Product) em.createQuery("select p from Product p left join fetch p.availAbility where p.id='" + id + "'").getSingleResult();
 		String message = "Produkt " + id + " byl vybrán";
 
 		applicationLogAction
@@ -67,6 +71,10 @@ public class ProductActionBean implements ProductAction {
 
 	public void addProduct() {
 		product.setCreateDate(new Date());
+		
+		String productId = seriesGenerator.getProductPk(seriesGenerator.getDefaultAccountingPeriod());
+		product.setId(productId);
+		
 		StockAvailAbility availAbility = product.getAvailAbility();
 		availAbility.setAvailAbility(0L);
 		em.persist(availAbility);

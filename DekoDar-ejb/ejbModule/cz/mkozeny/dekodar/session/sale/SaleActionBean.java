@@ -81,7 +81,7 @@ public class SaleActionBean implements SaleAction {
 
 	Integer currentRow;
 
-	Long productId;
+	String productId;
 
 	// String username;
 
@@ -117,7 +117,7 @@ public class SaleActionBean implements SaleAction {
 
 	public String showProductDetail(String id) {
 		// overime, zda-li PNC existuje
-		String query = "select p from Product p where p.id = " + id;
+		String query = "select p from Product p where p.id = '" + id + "'";
 		ArrayList<Product> pom = (ArrayList<Product>) em.createQuery(query)
 				.setMaxResults(1).getResultList();
 		if (pom.size() == 0) {
@@ -166,7 +166,7 @@ public class SaleActionBean implements SaleAction {
 		Product prod = null;
 		try {
 			// prod = em.find(Product.class, productId);
-			String queryStr = "Select p from Product p where id =" + productId;
+			String queryStr = "Select p from Product p where id ='" + productId + "'";
 			Query query = em.createQuery(queryStr);
 			query.setMaxResults(1);
 			ArrayList<Product> pom = (ArrayList<Product>) query.getResultList();
@@ -346,6 +346,9 @@ public class SaleActionBean implements SaleAction {
 	}
 
 	private void addSale() throws Exception {
+		
+		String saleId = seriesGenerator.getSalePk(seriesGenerator.getDefaultAccountingPeriod());
+		sale.setId(saleId);
 
 		em.persist(sale);
 		changeState(SaleStateType.OPENED);
@@ -432,11 +435,11 @@ public class SaleActionBean implements SaleAction {
 		this.currentRow = currentRow;
 	}
 
-	public Long getProductId() {
+	public String getProductId() {
 		return productId;
 	}
 
-	public void setProductId(Long productId) {
+	public void setProductId(String productId) {
 		this.productId = productId;
 	}
 

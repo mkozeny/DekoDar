@@ -242,4 +242,9 @@ public class ProductSearchActionBean implements ProductSearchAction,
 
 	}
 
+	public void unsetProductCategory() {
+		selectedNodeChildren.clear();
+		
+	}
+
 }

@@ -133,7 +133,7 @@ public class SalePdfReportActionBean extends PdfPageEventHelper implements
 			Font header = new Font(roman, 14, Font.BOLD);
 
 			document.addTitle("Pokladní doklad");
-			document.addAuthor("Ample");
+			document.addAuthor("Dekodar");
 			document.setMargins(45, 45, 45, 120);
 			document.setPageSize(PageSize.A4);
 			document.open();
@@ -155,9 +155,7 @@ public class SalePdfReportActionBean extends PdfPageEventHelper implements
 				float[] widths = { 70, 30 };
 				table.setWidths(widths);
 				table.setSpacingAfter(20);
-				List<Paragraph> paragraphs = new ArrayList<Paragraph>();
-				Paragraph text = new Paragraph();
-
+				
 				PdfPCell cell = new PdfPCell(new Paragraph("POKLADNÍ DOKLAD Č.: " + sale.getId(), bold));
 				cell.setHorizontalAlignment(Element.ALIGN_LEFT);
 				cell.setBorderWidth(0);
@@ -166,7 +164,7 @@ public class SalePdfReportActionBean extends PdfPageEventHelper implements
 
 				PdfContentByte cb = writer.getDirectContent();
 				Barcode128 code128 = new Barcode128();
-				code128.setCode(s.getId().toString());
+				code128.setCode(s.getId());
 				Image image128 = code128.createImageWithBarcode(cb, null, null);
 
 				cell = new PdfPCell(new Phrase(new Chunk(image128, 0, 0)));
@@ -249,7 +247,7 @@ public class SalePdfReportActionBean extends PdfPageEventHelper implements
 				table.setSpacingAfter(20);
 				table.setWidths(newerWidths);
 
-				table.addCell(new PdfPCell(new Paragraph("Číslo zboží", normal)));
+				table.addCell(new PdfPCell(new Paragraph("Kód zboží", normal)));
 
 				table.addCell(new PdfPCell(new Paragraph("Popis", normal)));
 

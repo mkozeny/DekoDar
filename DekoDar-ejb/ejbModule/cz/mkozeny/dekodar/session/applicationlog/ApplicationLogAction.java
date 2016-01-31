@@ -10,8 +10,8 @@ public interface ApplicationLogAction {
 	public void createLog(ApplicationLog.Severity severity, String message);
 	
 	public void createLogForProduct(ApplicationLog.Severity severity, String message, 
-			Long productId);
+			String productId);
 	
-	public void createLogForSale(ApplicationLog.Severity severity, String message, Long saleId);
+	public void createLogForSale(ApplicationLog.Severity severity, String message, String saleId);
 
 }

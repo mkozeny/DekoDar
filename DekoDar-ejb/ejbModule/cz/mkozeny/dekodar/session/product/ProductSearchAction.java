@@ -44,6 +44,8 @@ public interface ProductSearchAction {
 	
 	public ProductCategory getSelectedProductCategory();
 	
+	public void unsetProductCategory(); 
+	
 	public void destroy();
 
 }

@@ -23,6 +23,9 @@ public class AccountingPeriod {
 
 	@Length(max = 30)
 	String description;
+	
+	@Length(max=2)
+	String idSeriePrefix;
 
 	@ManyToOne
 	@NotNull
@@ -66,6 +69,14 @@ public class AccountingPeriod {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+	
+	public String getIdSeriePrefix() {
+		return idSeriePrefix;
+	}
+	
+	public void setIdSeriePrefix(String idSeriePrefix) {
+		this.idSeriePrefix = idSeriePrefix;
 	}
 
 	public Vat getLoVat() {

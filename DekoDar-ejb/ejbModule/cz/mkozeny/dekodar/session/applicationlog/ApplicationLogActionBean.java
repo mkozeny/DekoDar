@@ -32,7 +32,7 @@ public class ApplicationLogActionBean implements ApplicationLogAction{
 	}
 	
 	public void createLogForProduct(ApplicationLog.Severity severity, String message, 
-			Long productId) {
+			String productId) {
 		ApplicationLog appLog = new ApplicationLog();
 		appLog.setDateTime(new Date());
 		appLog.setMessage(message);
@@ -42,7 +42,7 @@ public class ApplicationLogActionBean implements ApplicationLogAction{
 		em.persist(appLog);
 	}
 	
-	public void createLogForSale(ApplicationLog.Severity severity, String message, Long saleId)
+	public void createLogForSale(ApplicationLog.Severity severity, String message, String saleId)
 	{
 		ApplicationLog appLog = new ApplicationLog();
 		appLog.setDateTime(new Date());

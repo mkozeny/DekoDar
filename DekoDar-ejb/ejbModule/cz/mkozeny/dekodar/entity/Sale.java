@@ -61,9 +61,7 @@ public class Sale {
 	}
 
 	@Id
-	@TableGenerator(name = "sale_gen", table = "generator_table", pkColumnName = "primary_key_column", valueColumnName = "Value_column", pkColumnValue = "sale_id", allocationSize = 1, initialValue = 1)
-	@GeneratedValue(strategy = GenerationType.TABLE, generator = "sale_gen")
-	Long id;
+	String id;
 
 	@NotNull
 	Date dateCreated;
@@ -220,11 +218,11 @@ public class Sale {
 		return PaymentType.values();
 	}
 
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 

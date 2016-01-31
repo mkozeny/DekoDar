@@ -114,7 +114,7 @@ public class SaleSearchActionBean implements SaleSearchAction, Serializable {
 		ArrayList<String> whereConditions = new ArrayList<String>();
 
 		if (id != null && id.length() > 0)
-			whereConditions.add(" s.id =" + id + "");
+			whereConditions.add(" s.id ='" + id + "'");
 
 		if (username != null && username.length() > 0)
 			whereConditions.add(" s.user.username like '" + username + "%'");

@@ -7,7 +7,7 @@ import cz.mkozeny.dekodar.entity.Product;
 @Local
 public interface ProductAction {
 	
-	public void selectProductById(Long pnc);
+	public void selectProductById(String pnc);
 
 	public void selectProduct(Product selectedProduct);
 

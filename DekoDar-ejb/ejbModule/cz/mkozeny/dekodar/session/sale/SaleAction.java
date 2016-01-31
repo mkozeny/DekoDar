@@ -31,9 +31,9 @@ public interface SaleAction {
 
 	public void destroy();
 
-	public Long getProductId();
+	public String getProductId();
 
-	public void setProductId(Long productId);
+	public void setProductId(String productId);
 
 	public Integer getQuantity();
 
