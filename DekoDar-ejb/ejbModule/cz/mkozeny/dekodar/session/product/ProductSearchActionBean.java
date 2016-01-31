@@ -139,6 +139,7 @@ public class ProductSearchActionBean implements ProductSearchAction,
 		ProductCategory rootProductCategory = (ProductCategory) em.createQuery(
 				"select p from ProductCategory p where p.type='ROOT'")
 				.getSingleResult();
+		this.allProductCategories.clear();
 		this.allProductCategories.add(rootProductCategory);
 		processNodeChildren(rootProductCategory, allProductCategories);
 		productCategories = Collections
