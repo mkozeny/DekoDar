@@ -11,27 +11,29 @@
 
 <ui:define name="leftArea">
      <rich:panel styleClass="filtering" headerClass="filterTitle">    
-            <f:facet name="header">#{messages['product.search']}</f:facet>
+            <f:facet name="header">Filtr</f:facet>
 	 			<h:form id="productFilterForm">
 	 					<h:panelGrid id="panel" columns="1"  styleClass="filterText">
-	 						<s:label for="idInput" value="#{messages['product.id']}"/>
+	 						<s:label for="idInput" value="id produktu"/>
 	    					<h:inputText styleClass="filterInput" value="#{productSearchAction.id}" id="idInput"></h:inputText>
 	 					  
-	  						<s:label for="modelInput" value="#{messages['product.model']}"/>
+	  						<s:label for="modelInput" value="model"/>
 	    					<h:inputText styleClass="filterInput" value="#{productSearchAction.model}" id="modelInput"></h:inputText>
 	    					
-	    					<s:label for="categoryInput" value="#{messages['product.category']}"/>
+	    					<s:label for="categoryInput" value="kategorie"/>
 	    					<rich:tree id="categoryInput" style="width:200px" 
 	    					nodeSelectListener="#{productSearchAction.processSelection}" ajaxSubmitSelection="true" switchType="client">
             <rich:recursiveTreeNodesAdaptor roots="#{productSearchAction.productCategories}" var="item" nodes="#{item.subcategories}" />
         </rich:tree>
-	    					
-	    				</h:panelGrid>
-	    				<h:commandButton style="vertical-align:middle;" action="#{productSearchAction.searchProducts()}" value="#{messages['button.search']}" >
+	    			</h:panelGrid>			
+	    				<h:commandButton action="#{productSearchAction.searchProducts()}" value="Vyhledat" >
 	    					<f:param name="mode" value="productCrud"/>
 	    				</h:commandButton>
-	    				<a4j:commandButton value="vymazat filtr (ctrl+f)" id="clearFilterButton" immediate="true"/>
-	    					    					    				    					         
+	    				<a4j:commandButton value="Vymazat filtr (ctrl+f)" id="clearFilterButton" immediate="true"/>
+	    					    	<h:commandLink  action="#{excelExporter.export('productForm:productTable')}">													
+	    				<h:graphicImage value="/img/dokument_excel.png" title="Export do excelu"  styleClass="exportButton"/>
+	    			</h:commandLink>
+	    						    				    					         
 				</h:form>	
 	<rich:hotKey  key="ctrl+f" handler="#{rich:element('clearFilterButton')}.click();" timing="onload" />		
 	<rich:jQuery selector="#clearFilterButton" query="click(function(){clearFilterText()})"/>	
@@ -51,23 +53,23 @@
        <rich:dataTable id="productTable" value="#{products}" var="productIter"   rows="#{customizer.pageSize}" reRender="ds">            
             <rich:column sortBy="#{productIter.id}"> 
                 <f:facet name="header">
-                    <h:outputText value="#{messages['product.id']}"/>
+                    <h:outputText value="id produktu"/>
                 </f:facet>  
                 <s:link rendered="#{mode=='productCrud' || mode==null}" action="#{productAction.selectProduct(productIter)}" value="#{productIter.id}" />  
                 <s:link rendered="#{mode=='productSaleOperation'}" action="#{saleAction.selectProduct(productIter)}" value="#{productIter.id}" />
                 <s:link rendered="#{mode=='productStockOperation'}" action="#{stockOperationAction.selectProduct(productIter)}" value="#{productIter.id}" />
             </rich:column>
             
-            <rich:column sortBy="#{productIter.model}">
+            <rich:column sortBy="model">
                 <f:facet name="header">
-                    <h:outputText value="#{messages['product.model']}"/>
+                    <h:outputText value="model"/>
                 </f:facet>
                 <h:outputText value="#{productIter.model}"/> 
             </rich:column>
             
             <rich:column sortBy="#{productIter.model}">
                 <f:facet name="header">
-                   <h:outputText value="#{messages['product.recommendedPrice']}"/>
+                   <h:outputText value="cena"/>
                 </f:facet>
                 <h:outputText value="#{productIter.price}" >
                 	<f:convertNumber  pattern="#{customizer.pricePattern}"/>
@@ -97,7 +99,7 @@
 					          <rich:jQuery selector=".c#{product.id}"	query="parent().addClass('active-row')" /> 
         <s:button value="vytvořit produkt" action="#{productAction.newProduct()}"/>
         <s:button rendered="#{mode=='productCrud' || mode==null}" id="printButton" action="#{productsBarCodePdfAction.doPdfReport()}"	value="Vytisknout čárové kódy (Ctrl+p)"/>
-        <h:commandButton value="#{messages['button.back']}" action="back"/>
+        <h:commandButton value="Zpět" action="back"/>
         
     </h:form>
 	

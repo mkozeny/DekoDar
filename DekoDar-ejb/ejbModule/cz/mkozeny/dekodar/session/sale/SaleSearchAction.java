@@ -29,6 +29,8 @@ public interface SaleSearchAction {
 	public PaymentType getPaymentType();
 
 	public PaymentType[] getPaymentTypes();
+	
+	public SaleStateType[] getSaleStateTypes();
 
 	public String getUsername();
 

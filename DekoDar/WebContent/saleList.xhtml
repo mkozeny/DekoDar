@@ -11,50 +11,50 @@
 
 <ui:define name="leftArea">
     <rich:panel styleClass="filtering" headerClass="filterTitle">    
-            <f:facet name="header">#{messages['user.filter']}</f:facet>
+            <f:facet name="header">Filtr</f:facet>
  				<h:form id="saleFilterForm">
  					<h:panelGrid id="panel" columns="1"  styleClass="filterText">
- 						<s:label for="saleIdInput" value="#{messages['sale.id']}"/>
+ 						<s:label for="saleIdInput" value="id dokladu"/>
     					<h:inputText styleClass="filterInput" value="#{saleSearchAction.id}" id="saleIdInput"></h:inputText>
  					  
-  						<s:label for="saleUsernmaeInput" value="#{messages['user.username']}"/>
+  						<s:label for="saleUsernmaeInput" value="username"/>
     					<h:inputText styleClass="filterInput" value="#{saleSearchAction.username}" id="saleUsernmaeInput"></h:inputText>  					
 									
 	    				
-	    				<s:label for="dateFromInput" value="#{messages['serviceOrder.dateCreated']} #{messages['button.dateFrom']}"/>						
+	    				<s:label for="dateFromInput" value="vytvořeno od"/>						
 						<s:decorate template="edit.xhtml">
 							<rich:calendar id="dateFromInput" value="#{saleSearchAction.dateFrom}"  enableManualInput="#{true}"  datePattern="#{customizer.datePattern}" locale="#{calendarBean.locale}" showApplyButton="#{false}"/>
 						</s:decorate>
 
-						<s:label for="dateToInput" value="#{messages['serviceOrder.dateCreated']} #{messages['button.dateTo']}"/>
+						<s:label for="dateToInput" value="vytvořeno do"/>
 
 						<s:decorate template="edit.xhtml">
 							<rich:calendar id="dateToInput" enableManualInput="#{true}" value="#{saleSearchAction.dateTo}"    datePattern="#{customizer.datePattern}" locale="#{calendarBean.locale}" showApplyButton="#{false}"/>
 						</s:decorate>
 
 						<s:label for="paymentType" styleClass="panelGridLabel">
-									<h:outputText value="#{messages['sale.paymentType']}" />
+									<h:outputText value="typ platby" />
 								</s:label>
 								
 									<h:selectOneMenu id="paymentType"
 										value="#{saleSearchAction.paymentType}">
 										<s:selectItems value="#{saleSearchAction.paymentTypes}"
-											var="enum" label="#{messages[enum.keyName]}" noSelectionLabel="Vyberte typ platby" />
+											var="enum" label="#{enum.keyName}" noSelectionLabel="Vyberte typ platby" />
 										<s:convertEnum />
 									</h:selectOneMenu>
 									
-						<s:label for="stateInput" value="#{messages['sale.state']}"/>
+						<s:label for="stateInput" value="stav"/>
 						<h:selectOneMenu id="stateInput"
 										value="#{saleSearchAction.saleStateType}">
-										<s:selectItems  value="#{invoiceSearchAction.saleStateTypes}"
-											var="enum" label="#{messages[enum.keyName]}" noSelectionLabel="Vyberte stav" />
+										<s:selectItems  value="#{saleSearchAction.saleStateTypes}"
+											var="enum" label="#{enum.keyName}" noSelectionLabel="Vyberte stav" />
 										<s:convertEnum />
 						</h:selectOneMenu>
 						
     					
     				</h:panelGrid>
-    				<h:commandButton action="#{saleSearchAction.searchSales()}" value="#{messages['button.search']}" />
-    				<a4j:commandButton value="vymazat filtr (ctrl+f)" id="clearFilterButton" immediate="true"/>
+    				<h:commandButton action="#{saleSearchAction.searchSales()}" value="Vyhledat" />
+    				<a4j:commandButton value="Vymazat filtr (ctrl+f)" id="clearFilterButton" immediate="true"/>
     				<h:commandLink  action="#{excelExporter.export('saleForm:saleTable')}">													
 	    				<h:graphicImage value="/img/dokument_excel.png" title="Export do excelu"  styleClass="exportButton"/>
 	    			</h:commandLink>    					         
@@ -78,14 +78,14 @@
             
             <rich:column sortBy="#{saleIter.id}"  styleClass="c#{saleIter.id}"> 
                 <f:facet name="header">
-                    <h:outputText value="#{messages['sale.id']}"/>
+                    <h:outputText value="id dokladu"/>
                 </f:facet>                
                 <s:link style="#{saleIter.state == 'CANCELLED' ?'text-decoration:line-through;':''}" value="#{saleIter.id}" action="#{saleAction.selectSale(saleIter)}" />
             </rich:column> 
              
              <rich:column >
                 <f:facet name="header">
-                    <h:outputText value="#{messages['serviceOrder.dateCreated']}"/>
+                    <h:outputText value="vytvořeno"/>
                 </f:facet>
                 <h:outputText value="#{saleIter.dateCreated}">
                 	<s:convertDateTime pattern="#{customizer.dateTimePattern}" />
@@ -101,7 +101,7 @@
             </rich:column>
             <rich:column >
                 <f:facet name="header">
-                    <h:outputText value="#{messages['sale.state']}"/>
+                    <h:outputText value="stav"/>
                 </f:facet>
                 <h:outputText value="#{messages[saleIter.state.keyName]}">                	
                 </h:outputText> 
@@ -109,7 +109,7 @@
            	
 			<rich:column >
                 <f:facet name="header">
-                    <h:outputText value="#{messages['user.user']}"/>
+                    <h:outputText value="username"/>
                 </f:facet>
                 <h:outputText value="#{saleIter.user.username}"/> 
             </rich:column>

@@ -32,8 +32,8 @@ import org.hibernate.validator.NotNull;
 public class Sale {
 
 	public static enum SaleStateType {
-		OPENED("Sale_opened"), PROCESSED("Sale_processed"), CLOSED(
-				"Sale_closed"), CANCELLED("Sale_cancelled");
+		OPENED("otevřená"), PROCESSED("zpracovaná"), CLOSED(
+				"zavřená"), CANCELLED("zrušená");
 
 		SaleStateType(String keyName) {
 			this.keyName = keyName;
@@ -47,7 +47,7 @@ public class Sale {
 	}
 
 	public static enum PaymentType {
-		CASH("payment_cash"), CREDIT_CARD("payment_credit_card");
+		CASH("hotově"), CREDIT_CARD("kartou");
 
 		PaymentType(String keyName) {
 			this.keyName = keyName;

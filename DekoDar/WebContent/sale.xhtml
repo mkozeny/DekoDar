@@ -12,7 +12,7 @@
 
 		
 		<rich:panel style="width:100%">
-			<f:facet name="header">Pokladní doklad číslo:  #{sale.id}</f:facet>
+			<f:facet name="header"><h:outputText value="Pokladní doklad číslo:  #{sale.id}" rendered="#{sale.id != null}"/></f:facet>
 			<h:form id="insertForm" >
 				<h:panelGrid columns="5" styleClass="formTable" style="width: 95%" cellspacing="10">
 					<f:facet name="header">
@@ -52,7 +52,7 @@
 					</h:panelGroup>
 					
 					
-					 <h:commandButton   id="addProduct" action="#{saleAction.addNewSaleLine()}"	value="Přidat produkt" >
+					 <h:commandButton   id="addProduct" action="#{saleAction.addNewSaleLine()}"	value="Přidat produkt" rendered="#{sale.state != 'PROCESSED'}">
 					 		<s:defaultAction/>
 					 </h:commandButton>			
 				</h:panelGrid>
@@ -179,6 +179,7 @@
 									<h:commandButton
 										action="#{saleAction.deleteSaleLine(saleLineIter)}"
 										value="Smazat"
+										rendered="#{sale.state != 'PROCESSED'}"
 										onclick="return confirm('#{messages['button.areYouSure']}')" />
 								</rich:column>
 							</rich:dataTable></td>
@@ -191,14 +192,14 @@
 									<h:outputText value="Doplňující údaje" />
 								</f:facet>
 								<s:label styleClass="panelGridLabel">
-									<h:outputText value="#{messages['sale.id']}" />
+									<h:outputText value="id dokladu" />
 								</s:label>
 								
 									<h:outputText value="#{sale.id}" />
 								
 
 								<s:label styleClass="panelGridLabel">
-									<h:outputText value="#{messages['sale.dateCreated']}" />
+									<h:outputText value="vytvořeno" />
 								</s:label>
 								
 									<h:outputText value="#{sale.dateCreated}" >
@@ -208,20 +209,20 @@
 								
 								
 								<s:label  styleClass="panelGridLabel">
-									<h:outputText value="#{messages['sale.state']}" />
+									<h:outputText value="stav" />
 								</s:label>
 								
-									<h:outputText value="#{messages[sale.state.keyName]}" />
+									<h:outputText value="#{sale.state.keyName}" />
 									
 								<s:label  styleClass="panelGridLabel">
-									<h:outputText value="#{messages['sale.paymentType']}" />
+									<h:outputText value="typ platby" />
 								</s:label>
 								
-								<h:outputText value="#{messages[sale.paymentType.keyName]}" />
+								<h:outputText value="#{sale.paymentType.keyName}" />
 																
 
 								<s:label styleClass="panelGridLabel">
-									<h:outputText value="#{messages['sale.discount']}" />
+									<h:outputText value="sleva" />
 								</s:label>
 								<s:decorate template="edit.xhtml">
 									<h:inputText  converter="#{bigDecimalConverter}" value="#{sale.discount}" styleClass="inputText">
@@ -233,7 +234,7 @@
 									</h:inputText>
 								</s:decorate>
 								<s:label styleClass="panelGridLabel">
-									<h:outputText value="#{messages['sale.note']}" />
+									<h:outputText value="poznámka" />
 								</s:label>
 								<h:inputTextarea value="#{sale.note}"  />
 								
@@ -251,7 +252,7 @@
 									</f:facet>
 									<s:label styleClass="panelGridLabel">
 										<h:outputText
-											value="#{messages['serviceOrder.totalPriceExlVat']}" />
+											value="Celková cena bez daně" />
 									</s:label>
 									<h:outputText value="#{sale.totalPriceExclVatValue}">
 										<f:convertNumber pattern="#{customizer.pricePattern}" />
@@ -259,7 +260,7 @@
 									
 	
 									<s:label styleClass="panelGridLabel">
-										<h:outputText value="#{messages['serviceOrder.totalVat']}" />
+										<h:outputText value="Celková hodnota DPH" />
 	
 	
 									</s:label>
@@ -272,7 +273,7 @@
 									
 									<s:label styleClass="panelGridLabel">
 										<h:outputText
-											value="#{messages['serviceOrder.totalPriceInclVat']}" />
+											value="Celková cena s DPH" />
 									</s:label>									
 									<h:outputText value="#{sale.totalPriceInclVatValue}" style="font-weight: bold;">
 										<f:convertNumber pattern="#{customizer.pricePattern}" />
@@ -293,16 +294,16 @@
 							
 														
 							<h:panelGroup id="buttons">								
-								    <h:commandButton action="#{saleAction.saveSale()}"	value="Uložit pokladní doklad"	rendered="#{sale.id!=null}" />
-									<h:commandButton action="#{saleAction.process()}" value="Zpracovat"/>									
-									<h:commandButton action="#{saleAction.cancel()}" value="Zrušit doklad" onclick="return confirm('#{messages['button.areYouSureToCancel']}')"/>
+								    <h:commandButton action="#{saleAction.saveSale()}"	value="Uložit pokladní doklad"	rendered="#{sale.id!=null and sale.state == 'OPENED'}" />
+									<h:commandButton action="#{saleAction.process()}" value="Zpracovat"	rendered="#{sale.id!=null and sale.state == 'OPENED'}" />									
+									<h:commandButton action="#{saleAction.cancel()}" value="Zrušit doklad" onclick="return confirm('#{messages['button.areYouSureToCancel']}')"	rendered="#{sale.id!=null and sale.state != 'PROCESSED'}" />
 								
-									<h:commandButton id="printButton" action="#{saleReportAction.doPdfReport()}"	value="Vytisknout doklad (Ctrl+p)"/>
-								
-
+									<h:commandButton id="printButton" action="#{saleReportAction.doPdfReport()}"	value="Vytisknout doklad (Ctrl+p)" rendered="#{sale.id != null}"/>
 								
 
-									<s:button value="#{messages['button.backToList']}" action="back" propagation="end"/>
+								
+
+									<s:button value="Zpět" action="back" propagation="end"/>
 									<s:button id="newSaleButton" style="flow: right;" action="#{saleAction.newSale()}" value="Nový pokladní doklad (Ctrl+n)"  propagation="none" rendered="#{sale.state != 'OPENED'}"  />		
 									
 								<a4j:status>								

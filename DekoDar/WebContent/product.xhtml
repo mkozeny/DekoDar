@@ -20,7 +20,7 @@
 </style>
 
 		<rich:panel style="width:98%">
-			<f:facet name="header"> #{product.model} (#{product.id}) </f:facet>
+			<f:facet name="header"><h:outputText value="#{product.model} (#{product.id})" rendered="#{product.id != null}"/> </f:facet>
 			<h:form>
 				<s:validateAll>
 
@@ -29,10 +29,10 @@
 							<td valign="top"><h:panelGrid columns="2"
 									styleClass="formTable">
 									<f:facet name="header">
-										<h:outputText value="#{messages['product.zakladniUdaje']}" />
+										<h:outputText value="Základní údaje" />
 									</f:facet>
 									<s:label styleClass="panelGridLabel">
-										<h:outputText value="#{messages['product.pnc']}" />
+										<h:outputText value="id produktu" />
 									</s:label>
 									<s:decorate template="edit.xhtml">
 										<h:outputText value="#{product.id}" required="true"
@@ -40,7 +40,7 @@
 									</s:decorate>
 									
 									<s:label styleClass="panelGridLabel">
-										<h:outputText value="#{messages['product.category']}" />
+										<h:outputText value="kategorie" />
 									</s:label>
 									<s:decorate template="edit.xhtml">
 									<h:selectOneMenu value="#{product.productCategory}">
@@ -50,7 +50,7 @@
 									</s:decorate>
 
 									<s:label styleClass="panelGridLabel">
-										<h:outputText value="#{messages['product.model']}" />
+										<h:outputText value="model" />
 									</s:label>
 									<s:decorate template="edit.xhtml">
 										<h:inputText value="#{product.model}" required="true"
@@ -58,7 +58,7 @@
 									</s:decorate>
 
 									<s:label styleClass="panelGridLabel">
-										<h:outputText value="#{messages['product.description']}" />
+										<h:outputText value="popis" />
 									</s:label>
 									<s:decorate template="edit.xhtml">
 										<h:inputText value="#{product.description}"
@@ -66,19 +66,19 @@
 									</s:decorate>
 
 									<s:label styleClass="panelGridLabel">
-										<h:outputText value="#{messages['product.barCode']}" />
+										<h:outputText value="čárový kód" />
 									</s:label>
 									<s:decorate template="edit.xhtml">
 										<h:inputText value="#{product.barCode}" styleClass="inputText" />
 									</s:decorate>
 									
 									<s:label styleClass="panelGridLabel">
-										<h:outputText value="#{messages['product.availAbility']}" />
+										<h:outputText value="dostupnost" />
 									</s:label>
 									<h:outputText value="#{product.availAbility.availAbility}"/>
 									
 									<s:label styleClass="panelGridLabel">
-										<h:outputText value="#{messages['product.createDate']}">
+										<h:outputText value="vytvořeno">
 										</h:outputText>
 									</s:label>
 									<h:outputText value="#{product.createDate}">
@@ -93,7 +93,7 @@
 							<td valign="top"><h:panelGrid columns="2"
 									styleClass="formTable">
 									<f:facet name="header">
-										<h:outputText value="#{messages['product.prices']}" />
+										<h:outputText value="Cenové údaje" />
 									</f:facet>
 
 
@@ -102,7 +102,7 @@
 
 
 									<s:label styleClass="panelGridLabel">
-										<h:outputText value="#{messages['product.newPrice']}" />
+										<h:outputText value="cena" />
 									</s:label>
 									<s:decorate template="edit.xhtml">
 										<h:inputText value="#{product.price}" required="true"
@@ -124,16 +124,16 @@
 
 				<h:commandButton id="addButton"
 					action="#{productAction.addProduct()}"
-					value="#{messages['product.add']}" rendered="#{empty product.id}">
+					value="Přidat produkt" rendered="#{empty product.id}">
 					<s:defaultAction />
 				</h:commandButton>
 				<h:commandButton id="saveButton"
 					action="#{productAction.saveProduct()}"
-					value="#{messages['product.save']}"
+					value="Uložit produkt"
 					rendered="#{not empty product.id}">
 					<s:defaultAction />
 				</h:commandButton>
-				<s:button action="back" value="#{messages['button.back']}" />
+				<s:button action="back" value="Zpět" />
 
 
 			</h:form>

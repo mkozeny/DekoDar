@@ -164,6 +164,11 @@ public class SaleSearchActionBean implements SaleSearchAction, Serializable {
 	public void setSaleStateType(SaleStateType saleStateType) {
 		this.saleStateType = saleStateType;
 	}
+	
+	public SaleStateType[] getSaleStateTypes()
+	{
+		return SaleStateType.values();
+	}
 
 	@Observer("saleUpdated")
 	public void saleUpdated(Sale selectedSale) {
